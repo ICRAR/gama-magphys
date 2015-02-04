@@ -40,14 +40,14 @@ PARTITION_SIZE = 30
 _0001 = Decimal('.0001')
 
 
-def write_header(output_file, directory_name):
+def write_header(output_file, directory_name, magphys_directory):
     """
     Write the header
     """
     output_file.write('''#!/bin/bash
 # Use MagPhys to process one pixel
 #
-export magphys=/home/kevin/gama
+export magphys={1}
 export scratch={0}
 cd $scratch
 
@@ -60,7 +60,7 @@ export USER_OBS=$scratch/mygals.dat
 
 /bin/rm -f *.lbr
 
-'''.format(directory_name))
+'''.format(directory_name, magphys_directory))
 
 
 def write_run_magphys(output_file, galaxy_id, galaxy_number):
@@ -151,7 +151,7 @@ def partition_list(galaxy_list):
     return partitioned_list
 
 
-def close_old_and_open_new(dir_root_name, directory_counter, output_file):
+def close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory):
     if output_file is not None:
         output_file.close()
 
@@ -167,18 +167,20 @@ def close_old_and_open_new(dir_root_name, directory_counter, output_file):
     file_name = os.path.join(directory_name, 'process_data.sh')
     LOG.info('Creating {0}'.format(file_name))
     output_file = open(file_name, 'w')
-    write_header(output_file, directory_name)
+    write_header(output_file, directory_name, magphys_directory)
     return directory_counter, 0, output_file
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('dat_file_name', nargs=1, help='the dat file to use')
-    parser.add_argument('dir_root_name', nargs=1, help='the where the files are written')
+    parser.add_argument('dir_root_name', nargs=1, help='where the files are written')
+    parser.add_argument('magphys', nargs=1, help='where the magphys files are to be found')
     args = vars(parser.parse_args())
 
     dat_file_name = args['dat_file_name'][0]
     dir_root_name = args['dir_root_name'][0]
+    magphys_directory = args['magphys'][0]
 
     if not os.path.exists(dat_file_name):
         LOG.error('The file {0} does not exist'.format(dat_file_name))
@@ -224,12 +226,12 @@ def main():
 
         if len(partitioned_list) > 1 and output_file is not None:
             # Close the previous file
-            directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file)
+            directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory)
 
         for list_of_galaxies in partitioned_list:
             # Do we need a new output file
             if line_counter >= GALAXIES_PER_DIRECTORY or output_file is None:
-                directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file)
+                directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory)
 
             # Check if we need to build models
             write_check_we_have_something_to_do(output_file, list_of_galaxies)
