@@ -9,4 +9,4 @@
 #SBATCH --time=01:00:00
 #SBATCH --account=partner1024
 
-aprun -n 1 bash ~/test.sh
+aprun -n 1 bash ~/process_data.sh
