@@ -1,5 +1,4 @@
 #!/bin/bash --login
-
 # SLURM directives
 #
 #SBATCH --job-name=gama-magphys
