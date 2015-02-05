@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Show the environment variables
 echo "ALPS_APP_PE = $ALPS_APP_PE"
 echo "SLURM_ARRAY_TASK_ID = $SLURM_ARRAY_TASK_ID"
 echo "SLURM_SUBMIT_DIR = $SLURM_SUBMIT_DIR"
