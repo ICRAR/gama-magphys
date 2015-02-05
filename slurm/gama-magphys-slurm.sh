@@ -9,4 +9,6 @@
 
 aprun -n 24 -N 24 $SLURM_SUBMIT_DIR/gama-magphys.sh
 
+date
 wait
+date
