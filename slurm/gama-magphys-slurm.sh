@@ -3,7 +3,7 @@
 #
 #SBATCH --job-name=gama-magphys
 #SBATCH --account=partner1024
-#SBATCH --time=06:00:00
+#SBATCH --time=03:00:00
 #SBATCH --ntasks=24
 #SBATCH --ntasks-per-node=24
 #SBATCH --nodes=1
