@@ -25,6 +25,8 @@
 """
 
 """
+from configobj import ConfigObj
+from os.path import exists, dirname
 
 config_file_name = dirname(__file__) + '/gama.settings'
 if exists(config_file_name):
