@@ -1,0 +1,10 @@
+#!/bin/sh
+#PBS -N pbs_process_magphys_files_run2
+#PBS -l nodes=1:ppn=1:compute,walltime=48:00:00
+#PBS -q small
+#PBS -j oe
+
+cd ~
+
+source /home/kevin/virt_env/pogs_analysis/bin/activate
+/home/kevin/virt_env/pogs_analysis/bin/python /home/kevin/gama-magphys/src/process_gama_output.py 2 /mnt/gamad/kevin/magnus/run_02-2015_02
