@@ -27,7 +27,7 @@
 Process the gama files
 """
 import argparse
-from fnmatch import fnmatch
+import fnmatch
 import logging
 from os import walk
 from os.path import split, splitext, join
@@ -122,7 +122,7 @@ def main(run_id, directory):
     insert_result = RESULT.insert()
 
     for root, dir_names, filenames in walk(directory):
-        for match in fnmatch(filenames, '*.fits'):
+        for match in fnmatch.filter(filenames, '*.fits'):
             result_file = join(root, match)
             LOG.info('Looking at: {0}'.format(result_file))
             gama_id = get_gama_id(result_file)
