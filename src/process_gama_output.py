@@ -31,6 +31,7 @@ import glob
 import logging
 import os
 from sqlalchemy import create_engine, select, and_
+from configuration import DB_LOGIN
 from database import FILTER, PARAMETER_NAME, GALAXY, RESULT, FILTER_VALUE
 from process_magphys_file import ProcessMagphysFile
 
@@ -91,7 +92,7 @@ def store_data(connection, run_id, galaxy, list_filter_values, map_results, inse
                                percentile97_5=result.percentile97_5,
                                )
         transaction.commit()
-    except:
+    except Exception:
         LOG.exception('Insert error')
         if transaction is not None:
             transaction.rollback()
@@ -108,8 +109,8 @@ def need_to_process(connection, gama_id, run_id):
     return galaxy is None
 
 
-def main(run_id, directory, database):
-    db_login = "{0}".format(database)
+def main(run_id, directory):
+    db_login = "{0}".format(DB_LOGIN)
     engine = create_engine(db_login)
     connection = engine.connect()
 
@@ -136,8 +137,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('run_id', type=int, nargs=1, help='the run id')
     parser.add_argument('directory', nargs=1, help='the directory with the files')
-    parser.add_argument('database', nargs=1, help='the DB connection string')
 
     args = vars(parser.parse_args())
 
-    main(args['run_id'][0], args['directory'][0], args['database'][0])
+    main(args['run_id'][0], args['directory'][0])

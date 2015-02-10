@@ -57,3 +57,5 @@ target/
 gama-magphys.iml
 
 magphys/run02/forkevin.csv
+
+src/gama.settings
