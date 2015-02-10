@@ -27,9 +27,10 @@
 Process the gama files
 """
 import argparse
-import glob
+from fnmatch import fnmatch
 import logging
-import os
+from os import walk
+from os.path import split, splitext, join
 from sqlalchemy import create_engine, select, and_
 from configuration import DB_LOGIN
 from database import FILTER, PARAMETER_NAME, GALAXY, RESULT, FILTER_VALUE
@@ -99,8 +100,8 @@ def store_data(connection, run_id, galaxy, list_filter_values, map_results, inse
 
 
 def get_gama_id(result_file):
-    path, filename = os.path.split(result_file)
-    gama_id, ext = os.path.splitext(filename)
+    path, filename = split(result_file)
+    gama_id, ext = splitext(filename)
     return gama_id
 
 
@@ -120,16 +121,18 @@ def main(run_id, directory):
     insert_filter_value = FILTER_VALUE.insert()
     insert_result = RESULT.insert()
 
-    for result_file in glob.glob(directory + '/*.f*'):
-        LOG.info('Looking at: {0}'.format(result_file))
-        gama_id = get_gama_id(result_file)
-        if need_to_process(connection, gama_id, run_id):
-            LOG.info('The file {0} needs processing'.format(result_file))
-            galaxy, list_filter_values, map_results = process_magphys.process_file(gama_id, result_file)
-            store_data(connection, run_id, galaxy, list_filter_values, map_results, insert_galaxy, insert_filter_value, insert_result)
-            LOG.info('Completed: {0}'.format(result_file))
-        else:
-            LOG.info('Skipping: {0}'.format(result_file))
+    for root, dir_names, filenames in walk(directory):
+        for match in fnmatch(filenames, '*.fits'):
+            result_file = join(root, match)
+            LOG.info('Looking at: {0}'.format(result_file))
+            gama_id = get_gama_id(result_file)
+            if need_to_process(connection, gama_id, run_id):
+                LOG.info('The file {0} needs processing'.format(result_file))
+                galaxy, list_filter_values, map_results = process_magphys.process_file(gama_id, result_file)
+                store_data(connection, run_id, galaxy, list_filter_values, map_results, insert_galaxy, insert_filter_value, insert_result)
+                LOG.info('Completed: {0}'.format(result_file))
+            else:
+                LOG.info('Skipping: {0}'.format(result_file))
 
     connection.close()
 
