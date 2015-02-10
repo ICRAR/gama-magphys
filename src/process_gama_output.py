@@ -122,8 +122,7 @@ def main(run_id, directory):
     insert_result = RESULT.insert()
 
     for root, dir_names, filenames in walk(directory):
-        LOG.info('{0}, {1}, {2}'.format(root, dir_names, filenames))
-        for match in fnmatch.filter(filenames, '*.fits'):
+        for match in fnmatch.filter(filenames, '*.fit'):
             result_file = join(root, match)
             LOG.info('Looking at: {0}'.format(result_file))
             gama_id = get_gama_id(result_file)
