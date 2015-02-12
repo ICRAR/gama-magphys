@@ -47,17 +47,23 @@ def create_hdu(rows, map_parameter_name):
             column = pyfits.Column(name='{0}[{1}]'.format(map_parameter_name[i], value), format='E')
             columns.append(column)
     hdu = pyfits.BinTableHDU.from_columns(columns, nrows=rows)
-    return hdu
+    return hdu, columns
 
 
-def load_data(connection, galaxy_id, row):
+def add(data, count, value):
+    data[count] = value
+
+
+def load_data(connection, galaxy_id, data, count):
+    field = 2
     for result in connection.execute(select([RESULT]).where(RESULT.c.galaxy_id == galaxy_id).order_by(RESULT.c.parameter_name_id)):
-        row.append(result[RESULT.c.best_fit])
-        row.append(result[RESULT.c.percentile2_5])
-        row.append(result[RESULT.c.percentile16])
-        row.append(result[RESULT.c.percentile50])
-        row.append(result[RESULT.c.percentile84])
-        row.append(result[RESULT.c.percentile97_5])
+        add(data[field], [count], result[RESULT.c.best_fit])
+        add(data[field+1], [count], result[RESULT.c.percentile2_5])
+        add(data[field+2], [count], result[RESULT.c.percentile16])
+        add(data[field+3], [count], result[RESULT.c.percentile50])
+        add(data[field+4], [count], result[RESULT.c.percentile84])
+        add(data[field+5], [count], result[RESULT.c.percentile97_5])
+        field += len(VALUES)
 
 
 def main(run_id, output_file, db_user):
@@ -70,20 +76,23 @@ def main(run_id, output_file, db_user):
     for parameter_name in connection.execute(select([PARAMETER_NAME])):
         map_parameter_name[parameter_name[PARAMETER_NAME.c.parameter_name_id]] = parameter_name[PARAMETER_NAME.c.name]
 
-    hdu = create_hdu(total, map_parameter_name)
-    hdu.writeto(output_file, clobber=True)
+    hdu, column_definitions = create_hdu(total, map_parameter_name)
 
-    hdulist = pyfits.open(output_file, mode='update', memmap=True)
-    table_data = hdulist[1].data
+    # Cache the fields
+    data_columns = []
+    for i in range(0, len(column_definitions)):
+        data_columns.append(hdu.data.field(i))
+
+    # Process the data
     count = 0
     for galaxy in connection.execute(select([GALAXY]).where(GALAXY.c.run_id == run_id).order_by(GALAXY.c.gama_id)):
-        if count % 100 == 0:
+        if count % 1000 == 0:
             LOG.info('Processing {0} of {3}: {1}, {2}'.format(count, galaxy[GALAXY.c.gama_id], galaxy[GALAXY.c.redshift], total))
-        row = [galaxy[GALAXY.c.gama_id], galaxy[GALAXY.c.redshift]]
-        load_data(connection, galaxy[GALAXY.c.galaxy_id], row)
-        table_data[count] = row
+        add(data_columns[0], [count], galaxy[GALAXY.c.gama_id])
+        add(data_columns[1], [count], galaxy[GALAXY.c.redshift])
+        load_data(connection, galaxy[GALAXY.c.galaxy_id], data_columns, count)
         count += 1
-    hdulist.close()
+    hdu.writeto(output_file, clobber=True)
     connection.close()
 
 
