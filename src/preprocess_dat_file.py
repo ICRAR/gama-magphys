@@ -255,4 +255,6 @@ def main():
         output_file.close()
 
 if __name__ == "__main__":
+    # ../magphys/run02/forkevin.csv /tmp/run /group/partner1024/kvinsen/gama-magphys/magphys run02
+    # ../magphys/ned01/lambdar_variations.cat /tmp/run /group/partner1024/kvinsen/gama-magphys/magphys run02
     main()
