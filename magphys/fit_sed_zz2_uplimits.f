@@ -10,8 +10,8 @@ c     --------------------------------------------------------------------------
 c     Compares model fluxes with observed fluxes from the ultraviolet to the
 c     far-infrared by computing the chi^2 goodness-of-fit of each model.
 c     The probability of each model is exp(-1/2 chi^2)
-c     The code also builds the likelihood distribution of each parameter 
-c     
+c     The code also builds the likelihood distribution of each parameter
+c
 c     INPUTS:
 c     - filter file - define USER_FILTERS in .galsbit_tcshrc
 c     - file with redshifts & observed fluxes of the
@@ -21,7 +21,7 @@ c     were computed "zlibs.dat"
 c     - .lbr files generated with get_optic_colors.f
 c     & get_infrared_colors.f
 c     - number of the galaxy to fit: i_gal
-c     
+c
 c     OUTPUTS: - "name".fit file containing:
 c     -- observed fluxes
 c     -- mininum chi2
@@ -43,9 +43,9 @@ c     ==========================================================================
       integer nfilt,filt_id(nmax),fit(nmax),ifilt
       parameter(nmod=50001,nprop_sfh=24,nprop_ir=8)
       character*12 filt_name(nmax)
-      character*20 outfile1,outfile2
+      character*50 outfile1,outfile2
       character*500 filter_header
-      character*8 gal_name(galmax),aux_name
+      character*40 gal_name(galmax),aux_name
       character*6 numz
       character optlib*34,irlib*26
       character filters*80,obs*80
@@ -103,7 +103,7 @@ czz added parameters
       real*8 z_lfb18_min,z_lfb18_max,z_dlfb18
       real*8 z_lfb19_min,z_lfb19_max,z_dlfb19
       real*8 z_lfb29_min,z_lfb29_max,z_dlfb29
-czz added parameters end 
+czz added parameters end
       real*8 fmuism_min,fmuism_max,dfmu_ism
       real*8 mu_min,mu_max,dmu
       real*8 tv_min,tv_max,dtv,dtvism
@@ -133,7 +133,7 @@ czz added parameters
       real*8 z_pct_lfb18(5)
       real*8 z_pct_lfb19(5)
       real*8 z_pct_lfb29(5)
-czz added parameters end 
+czz added parameters end
       real*8 pct_tbg1(5),pct_xi1(5),pct_xi2(5)
       real*8 pct_xi3(5),pct_tvism(5),pct_ism(5),pct_md(5)
       integer nbinmax1,nbinmax2
@@ -157,7 +157,7 @@ czz added parameters
       real*8 z_plfb182(nbinmax2)
       real*8 z_plfb192(nbinmax2)
       real*8 z_plfb292(nbinmax2)
-czz added parameters end 
+czz added parameters end
       real*8 pa2(nbinmax2),pldust2(nbinmax2)
       real*8 ptbg1_2(nbinmax2),ptbg2_2(nbinmax2),pxi1_2(nbinmax2)
       real*8 ptvism2(nbinmax2),pism2(nbinmax2),pxi3_2(nbinmax2)
@@ -180,7 +180,7 @@ czz added parameters
       real*8 z_lfb182_hist(nbinmax2)
       real*8 z_lfb192_hist(nbinmax2)
       real*8 z_lfb292_hist(nbinmax2)
-czz added parameters end 
+czz added parameters end
       real*8 fmu2_hist(nbinmax2),mu2_hist(nbinmax2),tv2_hist(nbinmax2)
       real*8 sfr2_hist(nbinmax2),a2_hist(nbinmax2),ld2_hist(nbinmax2)
       real*8 tbg1_2_hist(nbinmax2),tbg2_2_hist(nbinmax2),xi2_hist(nbinmax2)
@@ -206,7 +206,7 @@ czz added parameters
       integer z_nbin_lfb18,z_nbin2_lfb18
       integer z_nbin_lfb19,z_nbin2_lfb19
       integer z_nbin_lfb29,z_nbin2_lfb29
-czz added parameters end 
+czz added parameters end
       integer nbin2_tbg1,nbin2_tbg2,nbin2_xi,nbin2_sfr,nbin2_ld
       real*8 fmu_hist(nbinmax1),psfh(nbinmax1),pism(nbinmax1)
       real*8 pir(nbinmax1),ptbg1(nbinmax1)
@@ -231,7 +231,7 @@ czz added parameters
       real*8 z_plfb18(nbinmax1)
       real*8 z_plfb19(nbinmax1)
       real*8 z_plfb29(nbinmax1)
-czz added parameters end 
+czz added parameters end
       real*8 ld_hist(nbinmax1),pldust(nbinmax1)
       real*8 tbg1_hist(nbinmax1),tbg2_hist(nbinmax1)
       real*8 ssfr_hist(nbinmax1),xi_hist(nbinmax1),pxi1(nbinmax1)
@@ -252,7 +252,7 @@ czz added parameters
       real*8 z_lfb18_hist(nbinmax1)
       real*8 z_lfb19_hist(nbinmax1)
       real*8 z_lfb29_hist(nbinmax1)
-czz added parameters end 
+czz added parameters end
       real*8 pxi2(nbinmax1),pxi3(nbinmax1)
       real*8 md_hist(nbinmax1),pmd(nbinmax1)
       real*8 i_fmu_sfh(nmod),i_fmu_ir(nmod)
@@ -276,36 +276,36 @@ czz added parameters
       real*8 z_i_lfb18(nmod)
       real*8 z_i_lfb19(nmod)
       real*8 z_i_lfb29(nmod)
-czz added parameters end 
+czz added parameters end
       real*8 i_tbg1(nmod),i_xi1(nmod),i_xi2(nmod),i_xi3(nmod)
       real*8 i_tbg2(nmod)
 c     cosmological parameters
       real*8 h,omega,omega_lambda,clambda,q
-      real*8 cosmol_c,dl  
+      real*8 cosmol_c,dl
 c     histogram parameters: min,max,bin width
       data fmu_min/0./,fmu_max/1.0005/,dfmu/0.001/
-      data fmuism_min/0./,fmuism_max/1.0005/,dfmu_ism/0.001/       
+      data fmuism_min/0./,fmuism_max/1.0005/,dfmu_ism/0.001/
       data mu_min/0./,mu_max/1.0005/,dmu/0.001/
       data tv_min/0./,tv_max/6.0025/,dtv/0.005/
       data ssfr_min/-13./,ssfr_max/-5.9975/,dssfr/0.05/
 czz added parameters
       data z_zmet_min/0./,z_zmet_max/2./,z_dzmet/0.01/   ! CZZ CHECK THESE VALUES
-      data z_ltform_min/8.0/,z_ltform_max/10.0/,z_dltform/0.005/ 
-      data z_lgamma_min/0.0/,z_lgamma_max/1.0/,z_dlgamma/0.005/ 
-      data z_ltlastb_min/8.0/,z_ltlastb_max/10.0/,z_dltlastb/0.005/ 
-      data z_lagem_min/8.0/,z_lagem_max/10.0/,z_dlagem/0.005/ 
-      data z_lager_min/8.0/,z_lager_max/10.0/,z_dlager/0.005/ 
-      data z_lsfr16_min/-13.0/,z_lsfr16_max/-7.5/,z_dlsfr16/0.005/ 
-      data z_lsfr17_min/-13.0/,z_lsfr17_max/-7.5/,z_dlsfr17/0.005/ 
-      data z_lsfr18_min/-13.0/,z_lsfr18_max/-7.5/,z_dlsfr18/0.005/ 
-      data z_lsfr19_min/-13.0/,z_lsfr19_max/-7.5/,z_dlsfr19/0.005/ 
-      data z_lsfr29_min/-13.0/,z_lsfr29_max/-7.5/,z_dlsfr29/0.005/ 
-      data z_lfb16_min/0.0/,z_lfb16_max/1.0/,z_dlfb16/0.001/ 
-      data z_lfb17_min/0.0/,z_lfb17_max/1.0/,z_dlfb17/0.001/ 
-      data z_lfb18_min/0.0/,z_lfb18_max/1.0/,z_dlfb18/0.001/ 
-      data z_lfb19_min/0.0/,z_lfb19_max/1.0/,z_dlfb19/0.001/ 
-      data z_lfb29_min/0.0/,z_lfb29_max/1.0/,z_dlfb29/0.001/ 
-czz added parameters end 
+      data z_ltform_min/8.0/,z_ltform_max/10.0/,z_dltform/0.005/
+      data z_lgamma_min/0.0/,z_lgamma_max/1.0/,z_dlgamma/0.005/
+      data z_ltlastb_min/8.0/,z_ltlastb_max/10.0/,z_dltlastb/0.005/
+      data z_lagem_min/8.0/,z_lagem_max/10.0/,z_dlagem/0.005/
+      data z_lager_min/8.0/,z_lager_max/10.0/,z_dlager/0.005/
+      data z_lsfr16_min/-13.0/,z_lsfr16_max/-7.5/,z_dlsfr16/0.005/
+      data z_lsfr17_min/-13.0/,z_lsfr17_max/-7.5/,z_dlsfr17/0.005/
+      data z_lsfr18_min/-13.0/,z_lsfr18_max/-7.5/,z_dlsfr18/0.005/
+      data z_lsfr19_min/-13.0/,z_lsfr19_max/-7.5/,z_dlsfr19/0.005/
+      data z_lsfr29_min/-13.0/,z_lsfr29_max/-7.5/,z_dlsfr29/0.005/
+      data z_lfb16_min/0.0/,z_lfb16_max/1.0/,z_dlfb16/0.001/
+      data z_lfb17_min/0.0/,z_lfb17_max/1.0/,z_dlfb17/0.001/
+      data z_lfb18_min/0.0/,z_lfb18_max/1.0/,z_dlfb18/0.001/
+      data z_lfb19_min/0.0/,z_lfb19_max/1.0/,z_dlfb19/0.001/
+      data z_lfb29_min/0.0/,z_lfb29_max/1.0/,z_dlfb29/0.001/
+czz added parameters end
       data sfr_min/-8./,sfr_max/3.5005/,dsfr/0.005/
       data a_min/2./,a_max/13.0025/,da/0.005/
       data ld_min/2./,ld_max/13.0025/,dldust/0.005/
@@ -325,11 +325,11 @@ czz added parameters
       save z_ltform,z_lgamma,z_ltlastb,z_lagem,z_lager
       save z_lsfr16,z_lsfr17,z_lsfr18,z_lsfr19,z_lsfr29
       save z_lfb16,z_lfb17,z_lfb18,z_lfb19,z_lfb29
-czz added parameters end 
+czz added parameters end
       save tbg1,tbg2,xi1,xi2,xi3
       save flux_obs,sigma,dist
       save mdust
-       
+
       write(*,*) 'KV - Just to reassure me this is my code'
 
 c     ---------------------------------------------------------------------------
@@ -351,7 +351,7 @@ c     READ FILTER FILE: "filters.dat"
       enddo
       nfilt=ifilt-1
       close(22)
-      
+
 c     READ FILE WITH OBSERVATIONS:
       call getenv('USER_OBS',obs)
       close(20)
@@ -379,12 +379,12 @@ c     READ FILE WITH REDSHIFTS OF THE MODEL LIBRARIES
          read(24,*,iostat=io) i,zlib(nz)
          enddo
          nz=nz-1
-          
+
 c     CHOOSE GALAXY TO FIT (enter corresponding i)
       write (6,'(x,a,$)') 'Choose galaxy - enter i_gal: '
       read (5,*) i_gal
       write(*,*) i_gal
-        
+
 c     WHAT OBSERVATIONS DO YOU WANT TO FIT?
 c     fit(ifilt)=1: fit flux from filter ifilt
 c     fit(ifilt)=0: do not fit flux from filter ifilt (set flux=-99)
@@ -402,25 +402,25 @@ c     Count number of non-zero fluxes (i.e. detections) to fit
             n_flux=n_flux+1
          endif
       enddo
-      
+
 c     COMPUTE LUMINOSITY DISTANCE from z given cosmology
 c     Obtain cosmological constant and q
       clambda=cosmol_c(h,omega,omega_lambda,q)
-      
+
 c     Compute distance in Mpc from the redshifts z
       dist(i_gal)=dl(h,q,redshift(i_gal))
       dist(i_gal)=dist(i_gal)*3.086e+24/dsqrt(1.+redshift(i_gal))
-      
-      
+
+
 c     OUTPUT FILES
 c     name.fit: fit results, PDFs etc
 c     name.sed: best-fit SED
       aux_name=gal_name(i_gal)
       outfile1=aux_name(1:largo(aux_name))//'.fit'
       outfile2=aux_name(1:largo(aux_name))//'.sed'
-      close(31) 
+      close(31)
       open (31, file=outfile1, status='unknown')
-      
+
 c     Choose libraries according to the redshift of the source
 c     Find zlib(i) closest of the galaxie's redshift
       do i=1,nz
@@ -438,11 +438,11 @@ c              (if diffz(1) not gt 0.005)
       write(numz,'(f6.4)') zlib(1)
       optlib = 'starformhist_cb07_z'//numz//'.lbr'
       irlib = 'infrared_dce08_z'//numz//'.lbr'
-      
+
       write(*,*) 'z= ',redshift(i_gal)
       write(*,*) 'optilib=',optlib
       write(*,*) 'irlib=',irlib
- 
+
 c     ---------------------------------------------------------------------------
 c     What part of the SED are the filters sampling at the redshift of the galaxy?
 c     - lambda(rest-frame) < 2.5 mic : emission purely stellar (attenuated by dust)
@@ -550,9 +550,9 @@ czz added parameters
                   z_lfb18(i_sfh)=z_fb18(i_sfh)
                   z_lfb19(i_sfh)=z_fb19(i_sfh)
                   z_lfb29(i_sfh)=z_fb29(i_sfh)
- 
+
 c		  print *,i_sfh,z_zmet(i_sfh),z_lzmet(i_sfh),mstr1(i_sfh)
-czz added parameters end 
+czz added parameters end
                   tvism(i_sfh)=mu(i_sfh)*tauv(i_sfh)            ! mu*tauV=V-band optical depth for ISM
 c     .lbr contains absolute AB magnitudes -> convert to fluxes Fnu in Lo/Hz
 c     Convert all magnitudes to Lo/Hz (except H lines luminosity: in Lo)
@@ -643,13 +643,13 @@ c     Observed fluxes: Jy -> Lsun/Hz
                sigma(i_gal,k)=0.05*flux_obs(i_gal,k)
             endif
          enddo
-         
+
          do k=1,nfilt
             if (sigma(i_gal,k).gt.0.0) then
                w(i_gal,k) = 1.0 / (sigma(i_gal,k)**2)
             endif
          enddo
-         
+
 c     ---------------------------------------------------------------------------
 c     Initialize variables:
          n_models=0
@@ -684,7 +684,7 @@ czz added parameters
             z_plfb18(i)=0.
             z_plfb19(i)=0.
             z_plfb29(i)=0.
-czz added parameters end 
+czz added parameters end
 
             psfr(i)=0.
             pa(i)=0.
@@ -707,13 +707,13 @@ c     The high-resolution marginalized likelihood distributions will be
 c     computed on-the-run
 c     ---------------------------------------------------------------------------
 
-c     f_mu (SFH) & f_mu (IR)               
+c     f_mu (SFH) & f_mu (IR)
          call get_histgrid(dfmu,fmu_min,fmu_max,nbin_fmu,fmu_hist)
 c     mu parameter
          call get_histgrid(dmu,mu_min,mu_max,nbin_mu,mu_hist)
 c     tauv (dust optical depth)
          call get_histgrid(dtv,tv_min,tv_max,nbin_tv,tv_hist)
-c     sSFR    
+c     sSFR
          call get_histgrid(dssfr,ssfr_min,ssfr_max,nbin_ssfr,ssfr_hist)
 czz added parameters
 c     metalicity
@@ -733,12 +733,12 @@ c     metalicity
          call get_histgrid(z_dlfb18,z_lfb18_min,z_lfb18_max,z_nbin_lfb18,z_lfb18_hist)
          call get_histgrid(z_dlfb19,z_lfb19_min,z_lfb19_max,z_nbin_lfb19,z_lfb19_hist)
          call get_histgrid(z_dlfb29,z_lfb29_min,z_lfb29_max,z_nbin_lfb29,z_lfb29_hist)
-czz added parameters end 
-c     SFR    
+czz added parameters end
+c     SFR
          call get_histgrid(dsfr,sfr_min,sfr_max,nbin_sfr,sfr_hist)
-c     Mstars     
+c     Mstars
          call get_histgrid(da,a_min,a_max,nbin_a,a_hist)
-c     Ldust   
+c     Ldust
          call get_histgrid(dldust,ld_min,ld_max,nbin_ld,ld_hist)
 c     fmu_ism
          call get_histgrid(dfmu_ism,fmuism_min,fmuism_max,nbin_fmu_ism,
@@ -757,10 +757,10 @@ c     [makes code faster -- implemented by the Nottingham people]
          do i_sfh=1, n_sfh
             aux=((fmu_sfh(i_sfh)-fmu_min)/(fmu_max-fmu_min))*nbin_fmu
             i_fmu_sfh(i_sfh) = 1 + dint(aux)
-            
+
             aux = ((mu(i_sfh)-mu_min)/(mu_max-mu_min)) * nbin_mu
             i_mu(i_sfh) = 1 + dint(aux)
-            
+
             aux=((tauv(i_sfh)-tv_min)/(tv_max-tv_min)) * nbin_tv
             i_tauv(i_sfh) = 1 + dint(aux)
 
@@ -779,7 +779,7 @@ czzworking
             z_i_zmet(i_sfh)=1+dint(aux)
 
             if (z_ltform(i_sfh).lt.z_ltform_min) then
-               z_ltform(i_sfh)=z_ltform_min 
+               z_ltform(i_sfh)=z_ltform_min
             endif
             aux=((z_ltform(i_sfh)-z_ltform_min)/(z_ltform_max-z_ltform_min))*z_nbin_ltform
             z_i_ltform(i_sfh)=1+dint(aux)
@@ -869,10 +869,10 @@ c            endif
             aux=((z_lfb29(i_sfh)-z_lfb29_min)/(z_lfb29_max-z_lfb29_min))*z_nbin_lfb29
             z_i_lfb29(i_sfh)=1+dint(aux)
 
-czz added parameters end 
+czz added parameters end
 
          enddo
-          
+
          do i_ir=1, n_ir
             aux=((fmu_ir(i_ir)-fmu_min)/(fmu_max-fmu_min)) * nbin_fmu
             i_fmu_ir(i_ir) = 1+dint(aux)
@@ -902,11 +902,11 @@ c
 c     For each model in the stellar library, find all the models in the infrared
 c     dust emission library for which the proportion of dust luminosity from stellar
 c     birth clouds and diffuse ISM is the same, i.e. same "fmu" parameter (+/- df)
-c     Scale each infrared model satisfying this condition to the total dust 
+c     Scale each infrared model satisfying this condition to the total dust
 c     luminosity Ldust predicted by the stellar+attenuation model
 c     [this satisfies the energy balance]
 c
-c     
+c
 c     For each combination of model, compute the chi^2 goodness-of-fit
 c     by comparing the observed UV-to-IR fluxes with the model predictions
 c
@@ -931,7 +931,7 @@ c     Check progress of the fit...
                write (*,*) '100% done...', n_sfh, " opt. models - fit finished"
             endif
 
-            df=0.15             !fmu_opt=fmu_ir +/- dfmu 
+            df=0.15             !fmu_opt=fmu_ir +/- dfmu
 
 c     Search for the IR models with f_mu within the range set by df
             DO i_ir=1,25000!n_ir
@@ -947,7 +947,7 @@ c     Search for the IR models with f_mu within the range set by df
 
                   n_models=n_models+1 !to keep track of total number of combinations
 
-c     Build the model flux array by adding SFH & IR                 
+c     Build the model flux array by adding SFH & IR
                   do k=1,nfilt_sfh-nfilt_mix
                      flux_mod(k)=flux_sfh(i_sfh,k)
                   enddo
@@ -957,7 +957,7 @@ c     Build the model flux array by adding SFH & IR
                   enddo
                   do k=nfilt_sfh+1,nfilt
                      flux_mod(k)=ldust(i_sfh)*flux_ir(i_ir,k-nfilt_sfh+nfilt_mix)
-                  enddo          
+                  enddo
 c     Compute scaling factor "a" - this is the number that minimizes chi^2
                   do k=1,nfilt
                      if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).gt.0.) then
@@ -968,7 +968,7 @@ c     Compute scaling factor "a" - this is the number that minimizes chi^2
                   a=num/den
 c     Compute chi^2 goodness-of-fit
                   do k=1,nfilt_sfh
-                     if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).gt.0.) then                  
+                     if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).gt.0.) then
                         chi2=chi2+(((flux_obs(i_gal,k)-(a*flux_mod(k)))
      +                       **2)*w(i_gal,k))
                         chi2_opt=chi2
@@ -977,11 +977,11 @@ c     Compute chi^2 goodness-of-fit
                         chi2_nd=chi2_nd+2*dlog(0.5*(1.
      +                       +derf((sigma(i_gal,k)-a*flux_mod(k))/(sigma(i_gal,k)*sqrt(2.)))))
                         endif
-                  enddo 
+                  enddo
 
                   if (chi2.lt.600.) then
                      do k=nfilt_sfh+1,nfilt
-                        if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).gt.0.) then                  
+                        if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).gt.0.) then
                            chi2=chi2+(((flux_obs(i_gal,k)-(a*flux_mod(k)))
      +                          **2)*w(i_gal,k))
                            chi2_ir=chi2_ir+(((flux_obs(i_gal,k)-(a*flux_mod(k)))
@@ -993,7 +993,7 @@ c     Compute chi^2 goodness-of-fit
                         endif
                      enddo
                   endif
-                  
+
                   chi2=chi2-chi2_nd
 c     Probability
                   prob=dexp(-0.5*chi2)
@@ -1017,23 +1017,23 @@ c     and compute probability histogram
 c     (normalize only in the end of the big loop)
 c     for now just add up probabilities in each bin
 
-c     f_mu (SFH)               
+c     f_mu (SFH)
                   ibin= i_fmu_sfh(i_sfh)
                   ibin = max(1,min(ibin,nbin_fmu))
-                  psfh(ibin)=psfh(ibin)+prob                          
-c     f_mu (IR)               
+                  psfh(ibin)=psfh(ibin)+prob
+c     f_mu (IR)
                   ibin = i_fmu_ir(i_ir)
                   ibin = max(1,min(ibin,nbin_fmu))
                   pir(ibin)=pir(ibin)+prob
-c     mu              
+c     mu
                   ibin= i_mu(i_sfh)
                   ibin = max(1,min(ibin,nbin_mu))
                   pmu(ibin)=pmu(ibin)+prob
-c     tauV              
+c     tauV
                   ibin= i_tauv(i_sfh)
                   ibin = max(1,min(ibin,nbin_tv))
                   ptv(ibin)=ptv(ibin)+prob
-c     tvism              
+c     tvism
                   ibin= i_tvism(i_sfh)
                   ibin = max(1,min(ibin,nbin_tv))
                   ptvism(ibin)=ptvism(ibin)+prob
@@ -1112,14 +1112,14 @@ c tform
                   ibin = max(1,min(ibin,z_nbin_lfb29))
                   z_plfb29(ibin)=z_plfb29(ibin)+prob
 
-czz added parameters end 
+czz added parameters end
 
 c     Mstar
                   a=dlog10(a)
                   aux=((a-a_min)/(a_max-a_min)) * nbin_a
                   ibin=1+dint(aux)
                   ibin = max(1,min(ibin,nbin_a))
-                  pa(ibin)=pa(ibin)+prob  
+                  pa(ibin)=pa(ibin)+prob
 c     SFR_0.1Gyr
                   aux=((lssfr(i_sfh)+a-sfr_min)/(sfr_max-sfr_min))
      +                 * nbin_sfr
@@ -1127,15 +1127,15 @@ c     SFR_0.1Gyr
                   ibin = max(1,min(ibin,nbin_sfr))
                   psfr(ibin)=psfr(ibin)+prob
 c     Ldust
-                  aux=((logldust(i_sfh)+a-ld_min)/(ld_max-ld_min)) 
+                  aux=((logldust(i_sfh)+a-ld_min)/(ld_max-ld_min))
      +                 * nbin_ld
                   ibin=1+dint(aux)
                   ibin = max(1,min(ibin,nbin_ld))
-                  pldust(ibin)=pldust(ibin)+prob  
+                  pldust(ibin)=pldust(ibin)+prob
 c     xi_C^tot
                   ibin= i_fmu_ism(i_ir)
                   ibin = max(1,min(ibin,nbin_fmu_ism))
-                  pism(ibin)=pism(ibin)+prob 
+                  pism(ibin)=pism(ibin)+prob
 c     T_C^ISM
                   ibin= i_tbg1(i_ir)
                   ibin = max(1,min(ibin,nbin_tbg1))
@@ -1167,7 +1167,7 @@ c     Mdust
             ENDDO               !loop in i_ir
          ENDDO                  !loop in i_sfh
 
-c     Chi2-weighted models: normalize to total probability ptot         
+c     Chi2-weighted models: normalize to total probability ptot
          write(*,*) 'Number of random SFH models:       ', n_sfh
          write(*,*) 'Number of IR dust emission models: ', n_ir
          write(*,*) 'Value of df:                       ', df
@@ -1208,7 +1208,7 @@ czz added parameters
             z_plfb18(i)=z_plfb18(i)/ptot
             z_plfb19(i)=z_plfb19(i)/ptot
             z_plfb29(i)=z_plfb29(i)/ptot
-czz added parameters end 
+czz added parameters end
 
             pa(i)=pa(i)/ptot
             pldust(i)=pldust(i)/ptot
@@ -1216,11 +1216,11 @@ czz added parameters end
             ptbg1(i)=ptbg1(i)/ptot
             ptbg2(i)=ptbg2(i)/ptot
             pxi1(i)=pxi1(i)/ptot
-            pxi2(i)=pxi2(i)/ptot          
+            pxi2(i)=pxi2(i)/ptot
             pxi3(i)=pxi3(i)/ptot
             pmd(i)=pmd(i)/ptot
          enddo
-         
+
          write (*,*) 'About to get_percentiles'
 
          call get_percentiles(nbin_fmu,fmu_hist,psfh,pct_fmu_sfh)
@@ -1246,7 +1246,7 @@ czz added parameters
          call get_percentiles(z_nbin_lfb18,z_lfb18_hist,z_plfb18,z_pct_lfb18)
          call get_percentiles(z_nbin_lfb19,z_lfb19_hist,z_plfb19,z_pct_lfb19)
          call get_percentiles(z_nbin_lfb29,z_lfb29_hist,z_plfb29,z_pct_lfb29)
-czz added parameters end 
+czz added parameters end
          call get_percentiles(nbin_sfr,sfr_hist,psfr,pct_sfr)
          call get_percentiles(nbin_a,a_hist,pa,pct_mstr)
          call get_percentiles(nbin_ld,ld_hist,pldust,pct_ld)
@@ -1287,7 +1287,7 @@ czz added parameters
             z_plfb182(i)=0.
             z_plfb192(i)=0.
             z_plfb292(i)=0.
-czz added parameters end 
+czz added parameters end
             psfr2(i)=0.
             pa2(i)=0.
             pldust2(i)=0.
@@ -1333,7 +1333,7 @@ czz added parameters
          z_dlfb18=0.05
          z_dlfb19=0.05
          z_dlfb29=0.05
-czz added parameters end 
+czz added parameters end
          dsfr=0.10
          sfr_min=-8.
          sfr_max=3.
@@ -1351,7 +1351,7 @@ czz added parameters end
          md_max=9.
 
          call degrade_hist(dfmu,fmu_min,fmu_max,nbin_fmu,nbin2_fmu,
-     +        fmu_hist,fmu2_hist,psfh,psfh2)    
+     +        fmu_hist,fmu2_hist,psfh,psfh2)
          call degrade_hist(dfmu,fmu_min,fmu_max,nbin_fmu,nbin2_fmu,
      +        fmu_hist,fmu2_hist,pir,pir2)
          call degrade_hist(dfmu,fmu_min,fmu_max,nbin_mu,nbin2_mu,
@@ -1395,7 +1395,7 @@ czz added parameters
      +        z_lfb19_hist,z_lfb192_hist,z_plfb19,z_plfb192)
          call degrade_hist(z_dlfb29,z_lfb29_min,z_lfb29_max,z_nbin_lfb29,z_nbin2_lfb29,
      +        z_lfb29_hist,z_lfb292_hist,z_plfb29,z_plfb292)
-czz added parameters end 
+czz added parameters end
          call degrade_hist(dsfr,sfr_min,sfr_max,nbin_sfr,nbin2_sfr,
      +        sfr_hist,sfr2_hist,psfr,psfr2)
          call degrade_hist(da,a_min,a_max,nbin_a,nbin2_a,a_hist,
@@ -1441,7 +1441,7 @@ c     --------------------------------------------------------------------------
      +        '..xi_PAH^tot..xi_MIR^tot....xi_W^tot.....tvism',
      +        '.......Mdust.....SFR')
  803     format(0p4f10.3,1p3e12.3,0p2f10.1,0p5f10.3,1p2e12.3)
-         
+
          write(31,703)
          write(31,804)
  804     format('# BEST FIT MODEL: (i_sfh, i_ir, chi2, redshift)')
@@ -1458,12 +1458,12 @@ c     --------------------------------------------------------------------------
      +        ssfr(sfh_sav)*a_sav
 czz added parameters
 CZZ set format???
-c         write(31)  z_zmet(sfh_sav),z_ltform(sfh_sav),z_lgamma(sfh_sav), 
-c     +        z_ltlastb(sfh_sav), z_lagem(sfh_sav), z_lager(sfh_sav), z_lsfr16(sfh_sav), 
+c         write(31)  z_zmet(sfh_sav),z_ltform(sfh_sav),z_lgamma(sfh_sav),
+c     +        z_ltlastb(sfh_sav), z_lagem(sfh_sav), z_lager(sfh_sav), z_lsfr16(sfh_sav),
 c     +        z_lsfr17(sfh_sav), z_lsfr18(sfh_sav), z_lsfr19(sfh_sav), z_lsfr29(sfh_sav),
 c     +        z_lfb16(sfh_sav), z_lfb17(sfh_sav), z_lfb18(sfh_sav), z_lfb19(sfh_sav), z_lfb29(sfh_sav)
-czz added parameters end 
-     
+czz added parameters end
+
 
          write(31,*) '#  '//filter_header(1:largo(filter_header))
          write(31,701) (a_sav*flux_sfh(sfh_sav,k),k=1,nfilt_sfh-nfilt_mix),
@@ -1503,7 +1503,7 @@ czz added parameters end
  809     format('# ... mu parameter ...')
          do ibin=1,nbin2_mu
             write(31,807) mu2_hist(ibin),pmu2(ibin)
-         enddo        
+         enddo
          write(31,60)
          write(31,61) (pct_mu(k),k=1,5)
 
@@ -1745,7 +1745,7 @@ czz added parameters
          write(31,62) (z_pct_lfb29(k),k=1,5)
 
 
-czz added parameters end 
+czz added parameters end
 
          write(*,*) 'Storing best-fit SED...'
          write(*,*) outfile2
@@ -1758,7 +1758,7 @@ czz added parameters end
 c     ===========================================================================
       SUBROUTINE DEGRADE_HIST(delta,min,max,nbin1,nbin2,hist1,hist2,prob1,prob2)
 c     ---------------------------------------------------------------------------
-c     Degrades the resolution of the histograms containing the likelihood 
+c     Degrades the resolution of the histograms containing the likelihood
 c     distribution of the parameters: to facilitate storage & visualization
 c     ---------------------------------------------------------------------------
 c     delta : bin width
@@ -1778,17 +1778,17 @@ c     ==========================================================================
       real*8 hist1(nbin1),prob1(nbin1)
       real*8 hist2(maxnbin2),prob2(maxnbin2)
       real*8 aux
-      
+
       max2=0.
       max2=max+(delta/2.)
 
       call get_histgrid(delta,min,max2,nbin2,hist2)
-      
+
       do i=1,nbin1
          aux=((hist1(i)-min)/(max-min)) * nbin2
          ibin=1+dint(aux)
          prob2(ibin)=prob2(ibin)+prob1(i)
-      enddo            
+      enddo
 
       RETURN
       END
@@ -1796,12 +1796,12 @@ c     ==========================================================================
 c     ===========================================================================
       SUBROUTINE GET_HISTGRID(dv,vmin,vmax,nbin,vout)
 c     ---------------------------------------------------------------------------
-c     Build histogram grid (i.e. vector of bins) 
+c     Build histogram grid (i.e. vector of bins)
 c     ---------------------------------------------------------------------------
 c       dv : bin width
 c     vmin : minumum value
 c     vmax : maximum value
-c     nbin : number of bins 
+c     nbin : number of bins
 c     vout : output vector of bins
 c     ===========================================================================
       implicit none
@@ -1809,7 +1809,7 @@ c     ==========================================================================
       parameter(maxnbin=5000)
       real*8 vout(maxnbin)
       real*8 vmin,vmax,x1,x2,dv
-      
+
       ibin=1
       x1=vmin
       x2=vmin+dv
@@ -1845,7 +1845,7 @@ c     ==========================================================================
 
       call sort2(n,par,probability)
 
-      pless=0.      
+      pless=0.
       do i=1,5
          n_perc(i)=1
          pless=0.
@@ -2164,10 +2164,10 @@ c     ==========================================================================
       SUBROUTINE GET_BESTFIT_SED(i_opt,i_ir,dmstar,dfmu_aux,dz,outfile)
 c     ---------------------------------------------------------------------------
 c     Gets the total (UV-to-infrared) best-fit SED
-c     
+c
 c     Gets stellar spectrum and dust emission spectra from .bin files
 c     and adds them to get total SED, and writes output in .sed file
-c     
+c
 c        i_opt : index in the Optical library
 c         i_ir : index in the Infrared library
 c       dmstar : stellar mass (scaling)
@@ -2177,7 +2177,7 @@ c      outfile : .sed file (output)
 c     ===========================================================================
       implicit none
       character infile1*80,infile2*80
-      character*20 outfile
+      character*50 outfile
       integer nage,niw_opt,niw_ir,niw_tot
       integer i,imod,nburst,k
       integer i_opt,i_ir,indx
@@ -2196,7 +2196,7 @@ c     ==========================================================================
       real sedtot(niw_tot),wl(niw_tot)
       real fir_new(niw_tot),fopt_new(niw_tot),fopt_aux(niw_tot)
       real fopt_new0(niw_tot),fopt_aux0(niw_tot)
-      
+
       mstar=sngl(dmstar)
       fmu_aux=sngl(dfmu_aux)
       z=sngl(dz)
@@ -2229,7 +2229,7 @@ c     Read Optical SEDs and properties (1st file = models 1 to 25000)
          read (29) nage,(age(i),sfr(i),i=1,nage),(sfrav(i),i=1,5)
          sfrav(3)=sfrav(3)/mstr1
          read (29) (opt_sed(i),opt_sed0(i),i=1,niw_opt)
-         
+
          if (indx.eq.i_opt) then
             fmuopt(imod)=fmu
 c     Normalise Optical SED by stellar mass of the model
@@ -2246,7 +2246,7 @@ c     Normalise Optical SED by stellar mass of the model
      +     .or.int(fmu*1000).eq.(int(fmu_aux*1000)-1)
      +     .or.int(fmu*1000).eq.(int(fmu_aux*1000)+1)) then
          write(*,*) 'optical... done'
-      endif 
+      endif
       if (int(fmu*1000).ne.int(fmu_aux*1000)
      +     .and.int(fmu*1000).ne.(int(fmu_aux*1000)-1)
      +     .and.int(fmu*1000).ne.(int(fmu_aux*1000)+1) ) then
@@ -2255,11 +2255,11 @@ c     Normalise Optical SED by stellar mass of the model
          open (29,file=infile1,status='old',form='unformatted')
          goto 7
       endif
-          
+
 c     Read Infrared SEDs and properties
       read (30) niw_ir,(wl_ir(i),i=1,niw_ir)
       do imod=1,50000
-         read (30) (irprop(i),i=1,8)	     	      
+         read (30) (irprop(i),i=1,8)
          read (30) (ir_sed(i),i=1,niw_ir)
          fmuir(imod)=irprop(1)
          if (imod.eq.i_ir) then
@@ -2270,9 +2270,9 @@ c     Read Infrared SEDs and properties
          endif
       enddo
  3    write(*,*) 'infrared... done'
-      
+
       write(*,*) 'Ldust/L_sun= ',mstar*ldust
-      
+
       write(31,315)
  315  format('#...fmu(Opt).....fmu(IR)....tform/yr.......gamma',
      +     '........Z/Zo........tauV..........mu.....M*/Msun',
@@ -2280,7 +2280,7 @@ c     Read Infrared SEDs and properties
       write(31,316) fmu,irprop(1),tform,gamma,zmet,tauv0,mu,mstar,
      +     sfrav(3),ldust*mstar
  316  format(0p2f12.3,1pe12.3,0p4f12.3,1p3e12.3)
-      
+
       write(31,319)
       write(31,317)
  317  format('#...xi_C^ISM....T_W^BC/K...T_C^ISM/K...xi_PAH^BC',
@@ -2310,7 +2310,7 @@ c     Make new wavelength vector by combining them
 c     Interpolate the optical SED in the new wavelength grid (do it in log)
       do i=1,niw_opt
          fopt_aux(i)=log10(fopt(i))
-         fopt_aux0(i)=log10(fopt0(i))           
+         fopt_aux0(i)=log10(fopt0(i))
       enddo
 
       do i=1,niw_tot
@@ -2344,7 +2344,7 @@ c     npts   - number of pairs of data points
 c     nterms - number of terms in fitting polynomial
 c     xin    - input value of x
 c     yout   - interplolated value of y
-c     
+c
 c     comments
 c     dimension statement valid for nterms up to 10
 c     value of nterms may be modified by the program
