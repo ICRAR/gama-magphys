@@ -57,7 +57,8 @@ target/
 gama-magphys.iml
 
 magphys/run02/forkevin.csv
+magphys/run03/forkevin.csv
 
 src/gama.settings
 
-magphys/ned01/lambdar_variations.cat
+magphys/run04/lambdar_variations.cat

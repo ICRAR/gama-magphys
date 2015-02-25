@@ -60,6 +60,7 @@ def store_data(connection, run_id, galaxy, list_filter_values, map_results, inse
     """
     transaction = connection.begin()
 
+    # noinspection PyBroadException
     try:
         # Insert the galaxy
         result = connection.execute(insert_galaxy,

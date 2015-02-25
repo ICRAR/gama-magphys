@@ -40,7 +40,7 @@ PARTITION_SIZE = 30
 _0001 = Decimal('.0001')
 
 
-def write_header(output_file, directory_name, magphys_directory, run):
+def write_header(output_file, directory_name, magphys_directory, run, magphys_library):
     """
     Write the header
     """
@@ -52,15 +52,15 @@ export scratch={0}
 cd $scratch
 
 export FILTERS=$magphys/FILTERBIN.RES
-export OPTILIB=$magphys/OptiLIB_cb07.bin
-export OPTILIBIS=$magphys/OptiLIBis_cb07.bin
+export OPTILIB=$magphys/OptiLIB_{3}.bin
+export OPTILIBIS=$magphys/OptiLIBis_{3}.bin
 export IRLIB=$magphys/InfraredLIB.bin
 export USER_FILTERS=$magphys/{2}/filters.dat
 export USER_OBS=$scratch/mygals.dat
 
 /bin/rm -f *.lbr
 
-'''.format(directory_name, magphys_directory, run))
+'''.format(directory_name, magphys_directory, run, magphys_library))
 
 
 def write_run_magphys(output_file, galaxy_id, galaxy_number):
@@ -151,7 +151,7 @@ def partition_list(galaxy_list):
     return partitioned_list
 
 
-def close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run):
+def close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run, magphys_library):
     if output_file is not None:
         output_file.close()
 
@@ -167,7 +167,7 @@ def close_old_and_open_new(dir_root_name, directory_counter, output_file, magphy
     file_name = os.path.join(directory_name, 'process_data.sh')
     LOG.info('Creating {0}'.format(file_name))
     output_file = open(file_name, 'w')
-    write_header(output_file, directory_name, magphys_directory, run)
+    write_header(output_file, directory_name, magphys_directory, run, magphys_library)
     return directory_counter, 0, output_file
 
 
@@ -177,11 +177,13 @@ def main():
     parser.add_argument('dir_root_name', nargs=1, help='where the files are written')
     parser.add_argument('magphys', nargs=1, help='where the magphys files are to be found')
     parser.add_argument('run', nargs=1, help='where the filters.dat file is to be found')
+    parser.add_argument('magphys_library', nargs=1, help='which MAGPHYS optical library to use', choices=['cb07', 'bc03'])
     args = vars(parser.parse_args())
 
     dat_file_name = args['dat_file_name'][0]
     dir_root_name = args['dir_root_name'][0]
     magphys_directory = args['magphys'][0]
+    magphys_library = args['magphys_library']
     run = args['run'][0]
 
     if not os.path.exists(dat_file_name):
@@ -228,12 +230,12 @@ def main():
 
         if len(partitioned_list) > 1 and output_file is not None:
             # Close the previous file
-            directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run)
+            directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run, magphys_library)
 
         for list_of_galaxies in partitioned_list:
             # Do we need a new output file
             if line_counter >= GALAXIES_PER_DIRECTORY or output_file is None:
-                directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run)
+                directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run, magphys_library)
 
             # Check if we need to build models
             write_check_we_have_something_to_do(output_file, list_of_galaxies)
@@ -255,6 +257,7 @@ def main():
         output_file.close()
 
 if __name__ == "__main__":
-    # ../magphys/run02/forkevin.csv /tmp/run /group/partner1024/kvinsen/gama-magphys/magphys run02
-    # ../magphys/ned01/lambdar_variations.cat /tmp/run /group/partner1024/kvinsen/gama-magphys/magphys run02
+    # ../magphys/run02/forkevin.csv /tmp/run /group/partner1024/kvinsen/gama-magphys/magphys run02 cb07
+    # ../magphys/ned01/lambdar_variations.cat /tmp/run /group/partner1024/kvinsen/gama-magphys/magphys run02 cb07
+    # ../magphys/run03/forkevin.csv /tmp/run /group/partner1024/kvinsen/gama-magphys/magphys run03 bc03
     main()
