@@ -30,6 +30,7 @@ import argparse
 from decimal import Decimal
 import logging
 import os
+from os.path import join, dirname
 
 
 LOG = logging.getLogger(__name__)
@@ -47,7 +48,7 @@ def write_header(output_file, directory_name, magphys_directory, run, magphys_li
     output_file.write('''#!/bin/bash
 # Use MagPhys to process one pixel
 #
-export magphys={1}
+export magphys={1}/magphys
 export scratch={0}
 cd $scratch
 
@@ -55,7 +56,7 @@ export FILTERS=$magphys/FILTERBIN.RES
 export OPTILIB=$magphys/OptiLIB_{3}.bin
 export OPTILIBIS=$magphys/OptiLIBis_{3}.bin
 export IRLIB=$magphys/InfraredLIB.bin
-export USER_FILTERS=$magphys/{2}/filters.dat
+export USER_FILTERS={1}/runs/{2}/filters.dat
 export USER_OBS=$scratch/mygals.dat
 
 /bin/rm -f *.lbr
@@ -183,7 +184,7 @@ def main():
     dat_file_name = args['dat_file_name'][0]
     dir_root_name = args['dir_root_name'][0]
     magphys_directory = args['magphys'][0]
-    magphys_library = args['magphys_library']
+    magphys_library = args['magphys_library'][0]
     run = args['run'][0]
 
     if not os.path.exists(dat_file_name):
