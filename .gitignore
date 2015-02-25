@@ -56,10 +56,9 @@ target/
 .idea
 gama-magphys.iml
 
-magphys/run02/forkevin.csv
-magphys/run03/forkevin.csv
-
 src/gama.settings
 
-magphys/run04/lambdar_variations.dat
-magphys/run05/lambdar_variations.dat
+runs/run02/forkevin.csv
+runs/run03/forkevin.csv
+runs/run04/lambdar_variations.dat
+runs/run05/lambdar_variations.dat
