@@ -30,7 +30,6 @@ import argparse
 from decimal import Decimal
 import logging
 import os
-from os.path import join, dirname
 
 
 LOG = logging.getLogger(__name__)
@@ -231,12 +230,24 @@ def main():
 
         if len(partitioned_list) > 1 and output_file is not None:
             # Close the previous file
-            directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run, magphys_library)
+            directory_counter, line_counter, output_file = close_old_and_open_new(
+                dir_root_name,
+                directory_counter,
+                output_file,
+                magphys_directory,
+                run,
+                magphys_library)
 
         for list_of_galaxies in partitioned_list:
             # Do we need a new output file
             if line_counter >= GALAXIES_PER_DIRECTORY or output_file is None:
-                directory_counter, line_counter, output_file = close_old_and_open_new(dir_root_name, directory_counter, output_file, magphys_directory, run, magphys_library)
+                directory_counter, line_counter, output_file = close_old_and_open_new(
+                    dir_root_name,
+                    directory_counter,
+                    output_file,
+                    magphys_directory,
+                    run,
+                    magphys_library)
 
             # Check if we need to build models
             write_check_we_have_something_to_do(output_file, list_of_galaxies)
