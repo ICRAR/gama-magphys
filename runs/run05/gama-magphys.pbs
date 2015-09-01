@@ -1,0 +1,12 @@
+#!/bin/sh
+#PBS -N pbs-gama-magphys
+#PBS -l nodes=1:ppn=1:compute,walltime=12:00:00
+#PBS -t 0-8810
+#PBS -q usmall
+# usmall is 32 items on the queue usmall2 is 8
+#PBS -j oe
+
+module load gfortran
+
+cd /mnt/gamad/kevin/run05/`printf %06d ${PBS_ARRAYID}`
+bash process_data.sh
