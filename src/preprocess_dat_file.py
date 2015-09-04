@@ -38,6 +38,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC
 GALAXIES_PER_DIRECTORY = 20
 PARTITION_SIZE = 30
 _0001 = Decimal('.0001')
+_0 = Decimal('0.0')
 
 
 def write_header(output_file, directory_name, magphys_directory, run, magphys_library):
@@ -208,7 +209,7 @@ def main():
             # Red shift must be positive
             redshift = Decimal(elements[1]).quantize(_0001)
             LOG.info('redshift: {0}'.format(redshift))
-            if redshift >= 0.0:
+            if redshift >= _0:
                 LOG.info('redshift >= 0.0')
                 redshift = str(redshift)
                 if redshift == '-0.0000':
