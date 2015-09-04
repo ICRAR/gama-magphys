@@ -208,9 +208,7 @@ def main():
 
             # Red shift must be positive
             redshift = Decimal(elements[1]).quantize(_0001)
-            LOG.info('redshift: {0}'.format(redshift))
             if redshift >= _0:
-                LOG.info('redshift >= 0.0')
                 redshift = str(redshift)
                 if redshift == '-0.0000':
                     redshift = '0.0000'
