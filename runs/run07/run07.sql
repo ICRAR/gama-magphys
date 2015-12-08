@@ -1,0 +1,24 @@
+USE gama_sed;
+INSERT INTO run (run_id, description) VALUES (7, 'Run based on the file PDR21Bandv01 using LAMBAR and bc03');
+
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'fuv'     , 0.1535, 123);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'nuv'     , 0.2301, 124);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'u'       , 0.3557, 115);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'g'       , 0.4702, 116);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'r'       , 0.6175, 117);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'i'       , 0.7491, 118);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'z'       , 0.8946, 119);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'Z'       , 0.8800, 318);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'Y'       , 1.0213, 319);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'J'       , 1.2525, 320);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'H'       , 1.6433, 321);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'K'       , 2.1503, 322);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'WISEW1'  , 3.4   , 280);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'WISEW2'  , 4.6   , 281);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'WISEW3'  , 12.0  , 282);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'WISEW4'  , 22.0  , 283);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'PACS100' , 100.0 , 170);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'PACS160' , 160.0 , 171);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'SPIRE250', 250.0 , 172);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'SPIRE350', 350.0 , 173);
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (7, 'SPIRE500', 500.0 , 174);
