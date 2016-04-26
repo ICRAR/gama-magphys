@@ -1348,7 +1348,7 @@ czz added parameters end
          dxi=0.05
          dmd=0.10
          md_min=-2.
-         md_max=9.
+         md_max=12.
 
          call degrade_hist(dfmu,fmu_min,fmu_max,nbin_fmu,nbin2_fmu,
      +        fmu_hist,fmu2_hist,psfh,psfh2)
