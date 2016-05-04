@@ -52,7 +52,7 @@ export magphys={1}/magphys
 export scratch={0}
 cd $scratch
 
-export FILTERS=$magphys/FILTERBIN.RES
+export FILTERS={1}/runs/{2}/FILTERBIN.RES
 export OPTILIB=$magphys/OptiLIB_{3}.bin
 export OPTILIBIS=$magphys/OptiLIBis_{3}.bin
 export IRLIB=$magphys/InfraredLIB.bin
