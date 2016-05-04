@@ -312,7 +312,7 @@ czz added parameters end
       data tbg1_min/30./,tbg1_max/60.0125/,dtbg/0.025/
       data tbg2_min/15./,tbg2_max/25.0125/
       data xi_min/0./,xi_max/1.0001/,dxi/0.001/
-      data md_min/-2./,md_max/9./,dmd/0.005/
+      data md_min/-2./,md_max/12./,dmd/0.005/
 c     cosmology
       data h/70./,omega/0.30/,omega_lambda/0.70/
       data isave/0/
