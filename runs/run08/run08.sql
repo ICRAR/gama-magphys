@@ -18,13 +18,10 @@ INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'IRAC1'	
 INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'IRAC2'		 , 4.51		, 29  );
 INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'IRAC3'		 , 5.76		, 30  );
 INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'IRAC4'		 , 8.00		, 31  );
-INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'MIPS24'	 , 24.	  , 32  );
-INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'MIPS70'	 , 70.	  , 33  );
-INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'PACS100'	 , 100.		, 51  );
-INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'PACS160'	 , 160.		, 52  );
-INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'SPIRE250' , 250.		, 42  );
-INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'SPIRE350' , 350.		, 43  );
-INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'SPIRE500' , 500.		, 44  );
-
-
-
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'MIPS24'	 , 24.0	  , 32  );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'MIPS70'	 , 70.0	  , 33  );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'PACS100'	 , 100.0	, 51  );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'PACS160'	 , 160.0	, 52  );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'SPIRE250' , 250.0	, 42  );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'SPIRE350' , 350.0	, 43  );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (8, 'SPIRE500' , 500.0	, 44  );

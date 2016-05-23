@@ -1,11 +1,8 @@
 #! /usr/bin/env python
 #
-#    (c) UWA, The University of Western Australia
-#    M468/35 Stirling Hwy
-#    Perth WA 6009
-#    Australia
-#
-#    Copyright by UWA, 2012
+#    ICRAR - International Centre for Radio Astronomy Research
+#    (c) UWA - The University of Western Australia
+#    Copyright by UWA (in the framework of the ICRAR)
 #    All rights reserved
 #
 #    This library is free software; you can redistribute it and/or
