@@ -1,0 +1,11 @@
+#!/bin/sh
+#PBS -N pbs_process_magphys_files
+#PBS -l nodes=1:ppn=1:compute,walltime=48:00:00
+#PBS -t 1-35973
+#PBS -q usmall
+# usmall is 32 items on the queue usmall2 is 8
+#PBS -j oe
+
+cd /scratch/kevin/gama/fred
+
+eval `awk NR==${PBS_ARRAYID} dofred.txt`

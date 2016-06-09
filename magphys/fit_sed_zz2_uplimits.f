@@ -43,7 +43,7 @@ c     ==========================================================================
       integer nfilt,filt_id(nmax),fit(nmax),ifilt
       parameter(nmod=50001,nprop_sfh=24,nprop_ir=8)
       character*12 filt_name(nmax)
-      character*50 outfile1,outfile2
+      character*100 outfile1,outfile2
       character*500 filter_header
       character*40 gal_name(galmax),aux_name
       character*6 numz

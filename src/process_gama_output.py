@@ -32,6 +32,7 @@ from sqlalchemy import create_engine, select, and_
 from configuration import DB_LOGIN
 from database import FILTER, PARAMETER_NAME, GALAXY, RESULT, FILTER_VALUE
 from process_magphys_file import ProcessMagphysFile
+from datetime import datetime
 
 LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC_FORMAT)
@@ -51,7 +52,7 @@ def get_maps(connection, run_id):
     return map_filter, map_parameter_name
 
 
-def store_data(connection, run_id, galaxy, list_filter_values, map_results, insert_galaxy, insert_filter_value, insert_result):
+def store_data(connection, run_id, galaxy, list_filter_values, map_results, update, sql_galaxy, sql_filter_value, sql_result):
     """
     Now store the data
     """
@@ -59,37 +60,86 @@ def store_data(connection, run_id, galaxy, list_filter_values, map_results, inse
 
     # noinspection PyBroadException
     try:
-        # Insert the galaxy
-        result = connection.execute(insert_galaxy,
-                                    run_id=run_id,
-                                    gama_id=galaxy.gama_id,
-                                    redshift=galaxy.redshift,
-                                    i_sfh=galaxy.i_sfh,
-                                    i_ir=galaxy.i_ir,
-                                    chi2=galaxy.chi2
-                                    )
-        galaxy_id = result.inserted_primary_key[0]
+        if update:
+            galaxy_id = connection.execute(
+                select([GALAXY.c.galaxy_id]).where(and_(GALAXY.c.run_id == run_id, GALAXY.c.gama_id == galaxy.gama_id))
+            ).fetchone()[0]
+            connection.execute(
+                sql_galaxy.values(
+                    i_sfh=galaxy.i_sfh,
+                    i_ir=galaxy.i_ir,
+                    chi2=galaxy.chi2,
+                    create_time=datetime.now(),
+                ).where(
+                    GALAXY.c.galaxy_id == galaxy_id,
+                )
+            )
+            for filter_value in list_filter_values:
+                connection.execute(
+                    sql_filter_value.values(
+                        flux=filter_value.flux,
+                        sigma=filter_value.sigma,
+                        flux_bfm=filter_value.flux_bfm,
+                        create_time=datetime.now(),
+                    ).where(
+                        and_(
+                            FILTER_VALUE.c.galaxy_id == galaxy_id,
+                            FILTER_VALUE.c.filter_id == filter_value.filter_id
+                        )
+                    )
+                )
+            for result in map_results.values():
+                connection.execute(
+                    sql_result.values(
+                        best_fit=result.best_fit,
+                        percentile2_5=result.percentile2_5,
+                        percentile16=result.percentile16,
+                        percentile50=result.percentile50,
+                        percentile84=result.percentile84,
+                        percentile97_5=result.percentile97_5,
+                        create_time=datetime.now(),
+                    ).where(
+                        and_(
+                            RESULT.c.galaxy_id == galaxy_id,
+                            RESULT.c.parameter_name_id == result.parameter_name_id
+                        )
+                    )
+                )
+        else:
+            # Insert the galaxy
+            result = connection.execute(
+                sql_galaxy,
+                run_id=run_id,
+                gama_id=galaxy.gama_id,
+                redshift=galaxy.redshift,
+                i_sfh=galaxy.i_sfh,
+                i_ir=galaxy.i_ir,
+                chi2=galaxy.chi2
+            )
+            galaxy_id = result.inserted_primary_key[0]
 
-        for filter_value in list_filter_values:
-            connection.execute(insert_filter_value,
-                               galaxy_id=galaxy_id,
-                               filter_id=filter_value.filter_id,
-                               flux=filter_value.flux,
-                               sigma=filter_value.sigma,
-                               flux_bfm=filter_value.flux_bfm,
-                               )
+            for filter_value in list_filter_values:
+                connection.execute(
+                    sql_filter_value,
+                    galaxy_id=galaxy_id,
+                    filter_id=filter_value.filter_id,
+                    flux=filter_value.flux,
+                    sigma=filter_value.sigma,
+                    flux_bfm=filter_value.flux_bfm,
+                )
 
-        for result in map_results.values():
-            connection.execute(insert_result,
-                               galaxy_id=galaxy_id,
-                               parameter_name_id=result.parameter_name_id,
-                               best_fit=result.best_fit,
-                               percentile2_5=result.percentile2_5,
-                               percentile16=result.percentile16,
-                               percentile50=result.percentile50,
-                               percentile84=result.percentile84,
-                               percentile97_5=result.percentile97_5,
-                               )
+            for result in map_results.values():
+                connection.execute(
+                    sql_result,
+                    galaxy_id=galaxy_id,
+                    parameter_name_id=result.parameter_name_id,
+                    best_fit=result.best_fit,
+                    percentile2_5=result.percentile2_5,
+                    percentile16=result.percentile16,
+                    percentile50=result.percentile50,
+                    percentile84=result.percentile84,
+                    percentile97_5=result.percentile97_5,
+                )
         transaction.commit()
     except Exception:
         LOG.exception('Insert error')
@@ -108,26 +158,41 @@ def need_to_process(connection, gama_id, run_id):
     return galaxy is None
 
 
-def main(run_id, directory):
+def main(run_id, directory, update):
     db_login = "{0}".format(DB_LOGIN)
     engine = create_engine(db_login)
     connection = engine.connect()
 
     map_filter, map_parameter_name = get_maps(connection, run_id)
     process_magphys = ProcessMagphysFile(map_filter, map_parameter_name)
-    insert_galaxy = GALAXY.insert()
-    insert_filter_value = FILTER_VALUE.insert()
-    insert_result = RESULT.insert()
+    if update:
+        update_galaxy = GALAXY.update()
+        update_filter_value = FILTER_VALUE.update()
+        update_result = RESULT.update()
+    else:
+        insert_galaxy = GALAXY.insert()
+        insert_filter_value = FILTER_VALUE.insert()
+        insert_result = RESULT.insert()
 
     for root, dir_names, filenames in walk(directory):
         for match in fnmatch.filter(filenames, '*.fit'):
             result_file = join(root, match)
             LOG.info('Looking at: {0}'.format(result_file))
             gama_id = get_gama_id(result_file)
-            if need_to_process(connection, gama_id, run_id):
+            if need_to_process(connection, gama_id, run_id) or update:
                 LOG.info('The file {0} needs processing'.format(result_file))
                 galaxy, list_filter_values, map_results = process_magphys.process_file(gama_id, result_file)
-                store_data(connection, run_id, galaxy, list_filter_values, map_results, insert_galaxy, insert_filter_value, insert_result)
+                store_data(
+                    connection,
+                    run_id,
+                    galaxy,
+                    list_filter_values,
+                    map_results,
+                    update,
+                    update_galaxy if update else insert_galaxy,
+                    update_filter_value if update else insert_filter_value,
+                    update_result if update else insert_result,
+                )
                 LOG.info('Completed: {0}'.format(result_file))
             else:
                 LOG.info('Skipping: {0}'.format(result_file))
@@ -138,7 +203,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('run_id', type=int, nargs=1, help='the run id')
     parser.add_argument('directory', nargs=1, help='the directory with the files')
+    parser.add_argument('-u', '--update', action="store_true", default=False, help='the data exists so update instead of insert')
 
     args = vars(parser.parse_args())
 
-    main(args['run_id'][0], args['directory'][0])
+    main(args['run_id'][0], args['directory'][0], args['update'])
