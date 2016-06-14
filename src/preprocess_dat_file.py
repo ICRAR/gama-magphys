@@ -35,8 +35,8 @@ import os
 LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC_FORMAT)
 
-GALAXIES_PER_DIRECTORY = 20
-PARTITION_SIZE = 30
+GALAXIES_PER_DIRECTORY = 200
+PARTITION_SIZE = 225
 _0001 = Decimal('.0001')
 _0 = Decimal('0.0')
 
