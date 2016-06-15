@@ -12,7 +12,9 @@ directory="/scratch/pawsey0160/kvinsen/run11/$dir_id"
 echo "directory = $directory"
 if [ -d $directory ]; then
     cd $directory
-    bash process_data.sh > "$SLURM_SUBMIT_DIR/$dir_id.log"
+    date > "$SLURM_SUBMIT_DIR/$dir_id.log"
+    bash process_data.sh >> "$SLURM_SUBMIT_DIR/$dir_id.log"
+    date >> "$SLURM_SUBMIT_DIR/$dir_id.log"
 else
     echo "Could not find directory = $directory"
 fi
