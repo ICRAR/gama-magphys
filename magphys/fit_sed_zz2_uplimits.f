@@ -398,7 +398,7 @@ c     fit(ifilt)=0: do not fit flux from filter ifilt (set flux=-99)
 c     Count number of non-zero fluxes (i.e. detections) to fit
       n_flux=0
       do k=1,nfilt
-         if (flux_obs(i_gal,k).gt.0) then
+         if (flux_obs(i_gal,k).ge.0) then
             n_flux=n_flux+1
          endif
       enddo
@@ -968,7 +968,7 @@ c     Compute scaling factor "a" - this is the number that minimizes chi^2
                   a=num/den
 c     Compute chi^2 goodness-of-fit
                   do k=1,nfilt_sfh
-                     if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).gt.0.) then
+                     if (flux_obs(i_gal,k).ge.0.and.sigma(i_gal,k).gt.0.) then
                         chi2=chi2+(((flux_obs(i_gal,k)-(a*flux_mod(k)))
      +                       **2)*w(i_gal,k))
                         chi2_opt=chi2
@@ -979,9 +979,9 @@ c     Compute chi^2 goodness-of-fit
                         endif
                   enddo
 
-                  if (chi2.lt.600.) then
+c                  if (chi2.lt.600.) then
                      do k=nfilt_sfh+1,nfilt
-                        if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).gt.0.) then
+                        if (flux_obs(i_gal,k).ge.0.and.sigma(i_gal,k).gt.0.) then
                            chi2=chi2+(((flux_obs(i_gal,k)-(a*flux_mod(k)))
      +                          **2)*w(i_gal,k))
                            chi2_ir=chi2_ir+(((flux_obs(i_gal,k)-(a*flux_mod(k)))
@@ -992,7 +992,7 @@ c     Compute chi^2 goodness-of-fit
      +                       +derf((sigma(i_gal,k)-a*flux_mod(k))/(sigma(i_gal,k)*sqrt(2.)))))
                         endif
                      enddo
-                  endif
+c                  endif
 
                   chi2=chi2-chi2_nd
 c     Probability
@@ -2177,7 +2177,7 @@ c      outfile : .sed file (output)
 c     ===========================================================================
       implicit none
       character infile1*80,infile2*80
-      character*50 outfile
+      character*100 outfile
       integer nage,niw_opt,niw_ir,niw_tot
       integer i,imod,nburst,k
       integer i_opt,i_ir,indx
