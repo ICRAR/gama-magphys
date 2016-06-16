@@ -35,8 +35,8 @@ import os
 LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC_FORMAT)
 
-GALAXIES_PER_DIRECTORY = 100
-PARTITION_SIZE = 90
+GALAXIES_PER_DIRECTORY = 40
+PARTITION_SIZE = 70     # Big chunks of the same redshift run quickly
 _0001 = Decimal('.0001')
 _0 = Decimal('0.0')
 
