@@ -418,6 +418,8 @@ c     name.sed: best-fit SED
       aux_name=gal_name(i_gal)
       outfile1=aux_name(1:largo(aux_name))//'.fit'
       outfile2=aux_name(1:largo(aux_name))//'.sed'
+      write(*,*) 'outfile1=',outfile1
+      write(*,*) 'outfile2=',outfile2
       close(31)
       open (31, file=outfile1, status='unknown')
 

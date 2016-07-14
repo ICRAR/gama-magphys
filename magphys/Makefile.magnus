@@ -1,6 +1,9 @@
 RM = /bin/rm -f
 UTILIB = ./public_utilities.a
-FC = ftn -N 255
+#FC = ftn -N 255
+FC = gfortran -std=legacy -ffixed-line-length-none
+
+$(warning do not forget to do: module swap PrgEnv-cray PrgEnv-gnu)
 
 .f.o:
 	$(FC) -c $<
