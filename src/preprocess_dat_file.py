@@ -67,6 +67,7 @@ export USER_OBS=$scratch/mygals.dat
 def write_run_magphys(output_file, galaxy_id, galaxy_number):
     output_file.write('''
 if [ ! -f {2} ]; then
+  echo "processing {0} - {1}"
   echo {0} | $magphys/fit_sed_zz2_uplimits
 else
   echo "skipping {0} - {1}"
