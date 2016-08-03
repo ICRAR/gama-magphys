@@ -1,5 +1,5 @@
 USE gama_sed;
-INSERT INTO run (run_id, description) VALUES (12, 'Run based on the file 24 bands using zCosmos and bc03');
+INSERT INTO run (run_id, description) VALUES (12, 'Run based on the file 26 bands using g10 zCosmos and bc03');
 
 INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (12, 'FUV'      , 0.152   , 46  );
 INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (12, 'NUV'      , 0.231   , 47  );

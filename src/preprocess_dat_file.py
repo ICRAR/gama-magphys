@@ -209,6 +209,7 @@ def main():
     galaxies_by_red_shift = {}
 
     with open(dat_file_name, 'r') as dat_file:
+        line_number = 1
         for line in dat_file:
             # remove whitespace
             line = line.strip()
@@ -216,18 +217,23 @@ def main():
             # Parse the line to remove bogus redshifts
             elements = line.split()
 
-            # Red shift must be positive
-            redshift = Decimal(elements[1]).quantize(_0001)
-            if redshift >= _0:
-                redshift = str(redshift)
-                if redshift == '-0.0000':
-                    redshift = '0.0000'
-                list_of_galaxies = galaxies_by_red_shift.get(redshift)
-                if list_of_galaxies is None:
-                    list_of_galaxies = []
-                    galaxies_by_red_shift[redshift] = list_of_galaxies
+            try:
+                # Red shift must be positive
+                redshift = Decimal(elements[1]).quantize(_0001)
+                if redshift >= _0:
+                    redshift = str(redshift)
+                    if redshift == '-0.0000':
+                        redshift = '0.0000'
+                    list_of_galaxies = galaxies_by_red_shift.get(redshift)
+                    if list_of_galaxies is None:
+                        list_of_galaxies = []
+                        galaxies_by_red_shift[redshift] = list_of_galaxies
 
-                list_of_galaxies.append(line)
+                    list_of_galaxies.append(line)
+            except Exception:
+                LOG.exception('Error processing line {0} - {1}'.format(line_number, line))
+
+            line_number += 1
 
     directory_counter = None
     line_counter = 0
