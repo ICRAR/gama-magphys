@@ -66,12 +66,16 @@ export USER_OBS=$scratch/mygals.dat
 
 def write_run_magphys(output_file, galaxy_id, galaxy_number):
     output_file.write('''
+START=$(date +%s)
 if [ ! -f {2} ]; then
   echo "processing {0} - {1}"
   echo {0} | $magphys/fit_sed_zz2_uplimits
 else
   echo "skipping {0} - {1}"
 fi
+END=$(date +%s)
+DIFF=$(echo "$END - $START" | bc)
+echo $DIFF seconds
 '''.format(galaxy_id, galaxy_number, ten_char_filename(galaxy_number, 'sed')))
 
 
@@ -82,6 +86,7 @@ def ten_char_filename(file_stem, extension):
 
 def write_model_generation(output_file, redshift):
     output_file.write('''
+START=$(date +%s)
 # Create the models
 echo "{0}
 70.0,0.3,0.7" > redshift
@@ -89,6 +94,10 @@ echo "{0}
 echo N | $magphys/make_zgrid
 cat redshift | $magphys/get_optic_colors
 cat redshift | $magphys/get_infrared_colors
+
+END=$(date +%s)
+DIFF=$(echo "$END - $START" | bc)
+echo $DIFF seconds
 
 '''.format(redshift))
 
