@@ -641,9 +641,12 @@ c     Observed fluxes: Jy -> Lsun/Hz
                sigma(i_gal,k)=sigma(i_gal,k)*1.e-23
      +              *3.283608731e-33*(dist(i_gal)**2)
             endif
-            if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).lt.0.05*flux_obs(i_gal,k)) then
-               sigma(i_gal,k)=0.05*flux_obs(i_gal,k)
+            if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).lt.0.10*flux_obs(i_gal,k)) then
+               sigma(i_gal,k)=0.10*flux_obs(i_gal,k)
             endif
+c            if (flux_obs(i_gal,k).gt.0.and.sigma(i_gal,k).lt.0.05*flux_obs(i_gal,k)) then
+c               sigma(i_gal,k)=0.05*flux_obs(i_gal,k)
+c            endif
          enddo
 
          do k=1,nfilt
