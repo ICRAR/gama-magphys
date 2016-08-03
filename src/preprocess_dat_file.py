@@ -39,6 +39,7 @@ GALAXIES_PER_DIRECTORY = 20
 PARTITION_SIZE = 40     # Big chunks of the same redshift run quickly
 _0001 = Decimal('.0001')
 _0 = Decimal('0.0')
+_6 = Decimal('6.0')
 
 
 def write_header(output_file, directory_name, magphys_directory, run, magphys_library):
@@ -220,7 +221,7 @@ def main():
             try:
                 # Red shift must be positive
                 redshift = Decimal(elements[1]).quantize(_0001)
-                if redshift >= _0:
+                if _0 <= redshift <= _6:
                     redshift = str(redshift)
                     if redshift == '-0.0000':
                         redshift = '0.0000'
