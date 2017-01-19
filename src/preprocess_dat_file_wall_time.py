@@ -268,6 +268,7 @@ def write_out_galaxies(**kwargs):
                 output_file, directory_name = open_outputfile(dir_out_root_name, directory_counter)
                 write_header(output_file, directory_name, dir_magphys, run, magphys_library)
                 directory_counter += 1
+                accumulated_wall_time = 0
 
             # Check if we need to build models
             write_check_we_have_something_to_do(output_file, list_of_galaxies)
@@ -302,9 +303,9 @@ def main():
     parser.add_argument('run', nargs=1, help='where the filters.dat file is to be found')
     parser.add_argument('magphys_library', nargs=1, help='which MAGPHYS optical library to use', choices=['cb07', 'bc03'])
     parser.add_argument('--get_infrared_colors', help='the get_infrared_colors executable name', default='get_infrared_colors')
-    parser.add_argument('--time_infrared_colors', type=int, help='the time (in minutes) for get_infrared_colors to run', default=5)
-    parser.add_argument('--time_optical_colors', type=int, help='the time (in minutes) for get_optical_colors to run', default=5)
-    parser.add_argument('--time_fit', type=int, help='the time to perform a fit', default=6)
+    parser.add_argument('--time_infrared_colors', type=int, help='the time (in minutes) for get_infrared_colors to run', default=2)
+    parser.add_argument('--time_optical_colors', type=int, help='the time (in minutes) for get_optical_colors to run', default=2)
+    parser.add_argument('--time_fit', type=int, help='the time to perform a fit', default=4)
     parser.add_argument('--wall_time', type=int, help='the wall time (in minutes)', default=180)
     parser.add_argument('--has_header_row', action='store_true', help='does the input file have a header row', default=False)
     parser.add_argument('--separator', help='what separator does the file use', default=',')
