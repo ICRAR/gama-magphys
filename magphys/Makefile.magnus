@@ -17,6 +17,9 @@ get_optic_colors: get_optic_colors.f filter.dec $(UTILIB)
 get_infrared_colors: get_infrared_colors.f filter.dec $(UTILIB)
 	$(FC) get_infrared_colors.f $(UTILIB) -o get_infrared_colors
 
+get_infrared_colors_smaddox: get_infrared_colors_smaddox.f filter.dec $(UTILIB)
+	$(FC) get_infrared_colors_smaddox.f $(UTILIB) -o get_infrared_colors_smaddox
+
 read_optilib_bin: read_optilib_bin.f $(UTILIB)
 	$(FC) read_optilib_bin.f $(UTILIB) -o read_optilib_bin
 
@@ -31,7 +34,7 @@ clean:
 
 all:
 	make public_utilities.a
-	make make_zgrid get_optic_colors get_infrared_colors fit_sed_zz2_uplimits
+	make make_zgrid get_optic_colors get_infrared_colors fit_sed_zz2_uplimits get_infrared_colors_smaddox
 	make read_optilib_bin read_irlib_bin
 
 #---------------------------------------------------------------------------

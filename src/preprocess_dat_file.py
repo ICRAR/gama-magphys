@@ -35,8 +35,6 @@ import os
 LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC_FORMAT)
 
-GALAXIES_PER_DIRECTORY = 20
-PARTITION_SIZE = 40     # Big chunks of the same redshift run quickly
 _0001 = Decimal('.0001')
 _0 = Decimal('0.0')
 _6 = Decimal('6.0')
@@ -85,7 +83,7 @@ def ten_char_filename(file_stem, extension):
     return filename
 
 
-def write_model_generation(output_file, redshift):
+def write_model_generation(output_file, redshift, get_infrared_colors):
     output_file.write('''
 START=$(date +%s)
 # Create the models
@@ -94,13 +92,13 @@ echo "{0}
 
 echo N | $magphys/make_zgrid
 cat redshift | $magphys/get_optic_colors
-cat redshift | $magphys/get_infrared_colors
+cat redshift | $magphys/{1}
 
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 echo $DIFF seconds
 
-'''.format(redshift))
+'''.format(redshift, get_infrared_colors))
 
 
 def write_fi(output_file):
@@ -148,12 +146,12 @@ echo "# Header" > mygals.dat
 '''.format(line))
 
 
-def partition_list(galaxy_list):
+def partition_list(galaxy_list, partition_size):
     counter = 0
     partitioned_list = []
     sub_list = []
     for galaxy in galaxy_list:
-        if counter % PARTITION_SIZE == 0 and counter > 0:
+        if counter % partition_size == 0 and counter > 0:
             partitioned_list.append(sub_list)
             sub_list = []
         sub_list.append(galaxy)
@@ -190,6 +188,9 @@ def main():
     parser.add_argument('magphys', nargs=1, help='where the magphys files are to be found')
     parser.add_argument('run', nargs=1, help='where the filters.dat file is to be found')
     parser.add_argument('magphys_library', nargs=1, help='which MAGPHYS optical library to use', choices=['cb07', 'bc03'])
+    parser.add_argument('--get_infrared_colors', help='the get_infrared_colors executable name', default='get_infrared_colors')
+    parser.add_argument('--galaxies_per_directory', type=int, help='how many galaxies per directory', default=20)
+    parser.add_argument('--partition_size', type=int, help='the partition size ', default=40)
     args = vars(parser.parse_args())
 
     dat_file_name = args['dat_file_name'][0]
@@ -197,6 +198,9 @@ def main():
     magphys_directory = args['magphys'][0]
     magphys_library = args['magphys_library'][0]
     run = args['run'][0]
+    get_infrared_colors = args['get_infrared_colors'][0]
+    galaxies_per_directory = args['galaxies_per_directory'][0]
+    partition_size = args['partition_size'][0]
 
     if not os.path.exists(dat_file_name):
         LOG.error('The file {0} does not exist'.format(dat_file_name))
@@ -218,13 +222,12 @@ def main():
             # Parse the line to remove bogus redshifts
             elements = line.split()
 
+            # noinspection PyBroadException
             try:
                 # Red shift must be positive
                 redshift = Decimal(elements[1]).quantize(_0001)
-                if _0 <= redshift <= _6:
+                if _0 < redshift <= _6:
                     redshift = str(redshift)
-                    if redshift == '-0.0000':
-                        redshift = '0.0000'
                     list_of_galaxies = galaxies_by_red_shift.get(redshift)
                     if list_of_galaxies is None:
                         list_of_galaxies = []
@@ -244,7 +247,7 @@ def main():
         galaxy_list = galaxies_by_red_shift[key]
         LOG.info('Looking at redshift:{0} galaxies:{1}'.format(key, len(galaxy_list)))
         # Partition the list
-        partitioned_list = partition_list(galaxy_list)
+        partitioned_list = partition_list(galaxy_list, partition_size)
 
         if len(partitioned_list) > 1 and output_file is not None:
             # Close the previous file
@@ -258,7 +261,8 @@ def main():
 
         for list_of_galaxies in partitioned_list:
             # Do we need a new output file
-            if line_counter >= GALAXIES_PER_DIRECTORY or output_file is None:
+            if line_counter >= galaxies_per_directory or output_file is None:
+                # noinspection PyTypeChecker
                 directory_counter, line_counter, output_file = close_old_and_open_new(
                     dir_root_name,
                     directory_counter,
@@ -271,7 +275,7 @@ def main():
             write_check_we_have_something_to_do(output_file, list_of_galaxies)
 
             write_data_file(output_file, key, list_of_galaxies)
-            write_model_generation(output_file, key)
+            write_model_generation(output_file, key, get_infrared_colors)
             galaxy_id = 1
             for line in list_of_galaxies:
                 elements = line.split()

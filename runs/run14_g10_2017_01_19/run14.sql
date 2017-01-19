@@ -1,0 +1,27 @@
+USE gama_sed;
+INSERT INTO run (run_id, description) VALUES (14, 'Run based on the file 26 bands using g10 zCosmos and bc03');
+
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'FUV'      , 0.152   , 123 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'NUV'      , 0.231   , 124 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'u'        , 0.3798  , 141 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'B'        , 0.445   , 164 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'V'        , 0.551   , 165 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'g'        , 0.4780  , 142 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'r'        , 0.6295  , 143 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'i'        , 0.7641  , 144 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'z'        , 0.9037  , 145 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'Y'        , 1.02    , 319 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'J'        , 1.25    , 320 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'H'        , 1.64    , 321 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'K'        , 2.15    , 322 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'IRAC1'    , 3.56    , 153 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'IRAC2'    , 4.51    , 154 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'IRAC3'    , 5.76    , 155 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'IRAC4'    , 8.00    , 156 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'MIPS24'   , 24.0    , 157 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'MIPS70'   , 70.0    , 158 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'PACS100'  , 100.0   , 442 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'PACS160'  , 160.0   , 443 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'SPIRE250' , 250.0   , 444 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'SPIRE350' , 350.0   , 445 );
+INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (14, 'SPIRE500' , 500.0   , 446 );

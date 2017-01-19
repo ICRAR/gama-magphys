@@ -1,0 +1,161 @@
+   1 KPNO MOSAIC U (k1001) filter                                       751
+   2 KPNO MOSAIC B (Harris k1002) filter                               1201
+   3 Subaru SuprimeCam B filter (www.naoj.org)                          200
+   4 UH8K CFHT B filter                                                  90
+   5 PFIP (PFC) WHT Harris B 5 filter                                   281
+   6 Subaru SuprimeCam V filter (www.naoj.org)                          200
+   7 UH8K CFHT V filter                                                 130
+   8 PFIP (PFC) WHT Harris V 5                                          481
+   9 KPNO MOSAIC R (Harris k1004) filter                               1201
+  10 Subaru SuprimeCam R_C filter (www.naoj.org)                        200
+  11 PFIP (PFC) WHT Harris R 5                                          376
+  12 STIS HST 50CCD R filter (transmission units)                        32
+  13 CFHT12K CFHT R Mould filter                                        111
+  14 LFC Palomar Hale 5m g' filter                                      372
+  15 HST ACS WFC F775W (81K)                                           2890
+  16 Subaru SuprimeCam i' filter (www.naoj.org)                         200
+  17 Subaru Suprime Ic                                                  200
+  18 PFIP (PFC) WHT Harris I 5 filter                                   221
+  19 LFC Palomar Hale 5m Broad-RI filter                                769
+  20 Subaru SuprimeCam z' filter (www.naoj.org)                         200
+  21 WIRC2 Palomar Hale 5m J filter                                      88
+  22 IRIS2 AAO J filter                                                2501
+  23 UFTI UKIRT K[98] filter                                            106
+  24 CFHT-IR K' filter                                                  385
+  25 WIRC2 Palomar Hale 5m Ks filter 7 degree tilt corrected           1601
+  26 IRIS2 AAO K filter                                                1401
+  27 QUIRC UH2.2m H+K filter                                            108
+  28 IRAC 3.6 micron filter (Transmission 1: 2004-08-09)                505
+  29 IRAC 4.5 micron filter (Transmission 2: 2004-08-09)                417
+  30 IRAC 5.8 micron filter (Transmission 3: 2004-08-09)                370
+  31 IRAC 8.0 micron filter (Transmission 4: 2004-08-09)                421
+  32 MIPS 24 micron filter (D. Elbaz)                                   238
+  33 MIPS 70 micron filter (D. Elbaz)                                   824
+  34 MIPS 160 micron filter (D. Elbaz)                                  486
+  35 SHARCII CSO 350um transmission (Dowell et al. 2002, SPIE)           66
+  36 SCUBA 850um Wide                                                   388
+  37 LABOCA APEX 870um transmission - G. Siringo, ESO (MPIfR - 2007 0   183
+  38 Bolocam 1.1mm (Jack Sayer's thesis)                                118
+  39 AzTEC 1.1mm Camera                                                 281
+  40 MAMBO 1.2mm                                                        274
+  41 1.3mm filter from IRAM PdB (appox as top hat)                      100
+  42 SPIRE 250 mu photometer band                                       428
+  43 SPIRE 350 mu photometer band                                       443
+  44 SPIRE 500 mu photometer band                                       437
+  45 CFHT WIRcam Ks (no atm, from web)                                  808
+  46 GALEX 1520 Angstrom (September 2003)                               471
+  47 GALEX 2310 Angstrom (September 2003)                              1321
+  48 ACS F475W filter                                                   401
+  49 ACS F814W filter                                                   379
+  50 ACS F850LP filter                                                  402
+  51 PACS 100 mu photometer band                                        142
+  52 PACS 160 mu photometer band                                        179
+  53 HST ACS WFC F606W (81K)                                           3579
+  54 HST ACS WFC F435W (81K)                                           2488
+  55 UH8K CFHT R filter                                                 147
+  56 UH8K CFHT I filter                                                 243
+  57 SDSS Camera u Response Function, airmass = 1.3 (June 2001)          47
+  58 SDSS Camera g Response Function, airmass = 1.3 (June 2001)          89
+  59 SDSS Camera r Response Function, airmass = 1.3 (June 2001)          75
+  60 SDSS Camera i Response Function, airmass = 1.3 (June 2001)          89
+  61 SDSS Camera z Response Function, airmass = 1.3 (June 2001)         141
+  62 NOAO/steidel_Un_k1041bp_aug04.txt_ccd kpno-mosaic+atm lambda_c=3   175
+  63 NOAO/steidel_G_k1042bp_aug04.txt_ccd kpno-mosaic+atm lambda_c=4.    87
+  64 NOAO/steidel_Rs_k1043bp_aug04.txt_ccd kpno-mosaic+atm lambda_c=6    91
+  65 INT_WFC U fitler (S Dye 2009)                                      100
+  66 INT WFC g filter (S Dye 2009)                                      100
+  67 INT WFC r filter (S Dye 2009)                                      100
+  68 INT WFC i filter (S Dye 2009)                                      100
+  69 INT WFC z filter (S dye 2009)                                      100
+  70 WFPC2 filter F814W (via Caryl Gronwall)                             33
+  71 LFC Palomar Hale 5m I-Bess filter                                  520
+  72 B UH8K/CFHT  + LORAL3 + atmosphere                                  61
+  73 V UH8K/CFHT + LORAL3 + Atmosphere                                   64
+  74 I UH8K/CFHT  + MK atmosphere                                       126
+  75 COSMOS u* CFHT MEGACAM (Capak website)                             273
+  76 COSMOS Subaru B_J (Capak website)                                  190
+  77 COSMOS Subaru V (Capak website)                                    186
+  78 COSMOS Subaru g+ (Capak website)                                   190
+  79 COSMOS Subaru r+ (Capak website)                                   189
+  80 COSMOS Subaru i+ (Capak website)                                   218
+  81 COSMOS Subaru z+ (Capak website)                                   198
+  82 COSMOS Subaru 427nm (Capak website)                                737
+  83 COSMOS Subaru 464nm (Capak website)                                769
+  84 COSMOS Subaru 484nm (Capak website)                                873
+  85 COSMOS Subaru 505nm (Capak website)                                929
+  86 COSMOS Subaru 527nm (Capak website)                                992
+  87 COSMOS Subaru 574nm (Capak website)                               1281
+  88 COSMOS Subaru 624nm (Capak website)                               1223
+  89 COSMOS Subaru 679nm (Capak website)                               1474
+  90 COSMOS Subaru 709nm (Capak website)                               1220
+  91 COSMOS Subaru NB711nm (Capak website)                              769
+  92 COSMOS Subaru 738nm (Capak website)                               1249
+  93 COSMOS Subaru 767nm (Capak website)                                650
+  94 COSMOS Subaru NB816nm (Capak website)                              534
+  95 COSMOS Subaru 827nm (Capak website)                               1142
+  96 SCUBA 450um Wide                                                   500
+  97 ISO LW2 6.75 micron filter (D. Elbaz)                               49
+  98 ISO LW3 15 micron filter (D. Elbaz)                                 75
+  99 Subaru MOIRCS K filter (SVO)                                      2681
+ 100 MUSYC U38 (Gawiser+'06) web                                        108
+ 101 MUSYC B (Gawiser+'06) web                                          291
+ 102 MUSYC V (Gawiser+'06) web                                          252
+ 103 MUSYC R (Gawiser+'06) web                                          546
+ 104 MUSYC I (Gawiser+'06) web                                          376
+ 105 MUSYC z' (Gawiser+'06) web                                         553
+ 106 LBC U_spec *QE                                                     749
+ 107 LBC B_blue *QE                                                     266
+ 108 LBC V_red *QE                                                      411
+ 109 LBC zSLOAN_red *QE                                                 457
+ 110 LBC Y_red *QE                                                      257
+ 111 WFCAM J filter; 1.0 mm H20; 1.3 airmass from Hewett et al. (2006   798
+ 112 WFCAM K filter; 1.0 mm H20; 1.3 airmass from Hewett et al. (2006  1198
+ 113 UKIRT/UH88 J (Capak website) from the UKIRT-WIRCAM website         236
+ 114 Wircam Ks CFHT filter page convolved with atmos, opt, detector (   847
+ 115 HST NICMOS F160W (Capak website)                                  1252
+ 116 HST ACS WFC F555W (81K)                                           2906
+ 117 HST ACS WFC F625W (81K)                                           2215
+ 118 MUSYC U (Gawiser+'06) web                                          248
+ 119 MUSYC ISPI J (Taylor+'09) web                                       44
+ 120 MUSYC Sofi H (Taylor+'09) web                                     1476
+ 121 MUSYC ISPI K (Taylor+'09) web                                      679
+ 122 NICMOS F110W                                                       808
+ 123 SMA 870um Gaussian                                                 100
+ 124 SMA 880um Gaussian                                                 100
+ 125 SMA 890um Gaussian                                                 100
+ 126 3.3mm filter from IRAM PdB (appox as top hat)                      100
+ 127 1.8mm filter from IRAM PdB (appox as top hat)                      100
+ 128 Subaru MOIRCS J filter (SVO)                                       417
+ 129 Subaru MOIRCS Ks filter (SVO)                                      784
+ 130 3.0mm filter from IRAM PdB (appox as top hat)                      100
+ 131 KPNO U Elbaz                                                       601
+ 132 Suprime B Elbaz                                                    194
+ 133 Suprime V Elbaz                                                    188
+ 134 Suprime R Elbaz                                                    195
+ 135 Suprime I Elbaz                                                    209
+ 136 Suprime z Elbaz                                                    200
+ 137 WISE W1 RSR per photon; Wright et al. 2010                         398
+ 138 WISE W2 RSR per photon; Wright et al. 2010                         548
+ 139 WISE W3 RSR per photon; Wright et al. 2010                        2301
+ 140 WISE W4 RSR per photon; Wright et al. 2010                        2312
+ 141 2MASS J filter (total response w/atm)                              109
+ 142 2MASS H filter (total response w/atm)                               58
+ 143 2MASS Ks filter (total response w/atm)                              78
+ 144 WFCAM Y filter; 1.0 mm H20; 1.3 airmass from Hewett et al. (2006   598
+ 145 WFCAM H filter; 1.0 mm H20; 1.3 airmass from Hewett et al. (2006  1199
+ 146 J FLAMINGOS MAGPHYS Dickinson 2010                                 489
+ 147 FLAMINGOS BARR H ColdWitness                                       793
+ 148 K FLAMINGOS MAGPHYS Dickinson 2010                                1021
+ 149 VIMOS U band web ETC                                               350
+ 150 HAWK-I J filter curve T=87K                                        144
+ 151 HAWK-I K (new) filter curve T=90K                                  304
+ 152 PACS 70 mu photometer band                                         109
+ 153 CFHT Wircam J (with atm, etc)                                       56
+ 154 CFHT Wircam Ks (with atm, etc)                                      82
+ 155 Artificial filter @345GHz (MAGPHYS)                                 50
+ 156 WISE W4: Modified W4 RSR detailed in Brown et al. 2014 [added Ma   947
+ 157 VISTA Z [added Jan 2012 - via M.Negrello]                          163
+ 158 VISTA Y [added Jan 2012 - via M.Negrello]                          247
+ 159 VISTA J [added Jan 2012 - via M.Negrello]                          322
+ 160 VISTA H [added Jan 2012 - via M.Negrello]                          520
+ 161 VISTA Ks [added Jan 2012 - via M.Negrello]                          684
