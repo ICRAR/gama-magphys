@@ -262,14 +262,14 @@ def partition_list(galaxy_list, time_infrared_colors, time_optical_colors, time_
         # It'll all fit
         sub_list.extend(galaxy_list)
     else:
-        if 5 * time_fit + time_infrared_colors + time_optical_colors + accumulated_wall_time > wall_time:
-            # We can't even fit 5 so start a new file
-            partitioned_list.append(sub_list)
+        if time_fit + time_infrared_colors + time_optical_colors + accumulated_wall_time > wall_time:
+            # We can't even fit 1 so start a new file
+            partitioned_list.append([])
             accumulated_wall_time = 0
 
         accumulated_wall_time += time_infrared_colors + time_optical_colors
         for galaxy in galaxy_list:
-            if accumulated_wall_time + time_fit >= wall_time:
+            if accumulated_wall_time + time_fit > wall_time:
                 partitioned_list.append(sub_list)
                 sub_list = []
                 accumulated_wall_time = time_infrared_colors + time_optical_colors
@@ -304,8 +304,11 @@ def write_out_galaxies(**kwargs):
         # Partition the list
         partitioned_list = partition_list(galaxy_list, time_infrared_colors, time_optical_colors, time_fit, wall_time, accumulated_wall_time)
 
-        for index in range(0, len(partitioned_list)):
-            list_of_galaxies = partitioned_list[index]
+        index = 0
+        for list_of_galaxies in partitioned_list:
+            # Update the index
+            index += 1
+
             # Do we need to close the file down?
             if len(list_of_galaxies) == 0 and output_file is not None:
                 close_file(output_file, accumulated_wall_time)
@@ -334,7 +337,7 @@ def write_out_galaxies(**kwargs):
             write_rm_lbr(output_file)
 
             # Make sure we don't close the last one
-            if index < len(partitioned_list) - 1:
+            if index < len(partitioned_list):
                 close_file(output_file, accumulated_wall_time)
                 output_file = None
 
