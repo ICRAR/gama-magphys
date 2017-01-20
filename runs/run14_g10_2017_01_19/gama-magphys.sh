@@ -15,6 +15,7 @@ if [ -d $directory ]; then
     date > "$SLURM_SUBMIT_DIR/$dir_id.log"
     bash process_data.sh >> "$SLURM_SUBMIT_DIR/$dir_id.log"
     date >> "$SLURM_SUBMIT_DIR/$dir_id.log"
+    echo "Completed directory = $directory at `date`"
 else
     echo "Could not find directory = $directory"
 fi
