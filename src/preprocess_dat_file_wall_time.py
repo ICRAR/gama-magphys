@@ -43,6 +43,8 @@ def write_header(output_file, directory_name, magphys_directory, run, magphys_li
     output_file.write('''#!/bin/bash
 # Use MagPhys to process one pixel
 #
+OVERALL_START=$(date +%s)
+
 export magphys={1}/magphys
 export scratch={0}
 cd $scratch
@@ -73,7 +75,7 @@ cat redshift | $magphys/get_optic_colors
 
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
-echo $DIFF seconds on get_optic_colors
+echo get_optic_colors took $DIFF seconds
 
 START=$(date +%s)
 
@@ -81,7 +83,7 @@ cat redshift | $magphys/{1}
 
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
-echo $DIFF seconds on {1}
+echo {1} took $DIFF seconds
 
 '''.format(redshift, get_infrared_colors))
 
@@ -114,6 +116,20 @@ def write_rm_lbr(output_file):
 ''')
 
 
+def close_file(output_file):
+    output_file.write('''
+# Remove any models
+/bin/rm -f *.lbr
+
+
+END=$(date +%s)
+DIFF=$(echo "$END - $OVERALL_START" | bc)
+echo '------------'
+echo Total run tool $DIFF seconds
+''')
+    output_file.close()
+
+
 def write_run_magphys(output_file, galaxy_id, galaxy_number):
     output_file.write('''
 START=$(date +%s)
@@ -125,7 +141,7 @@ else
 fi
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
-echo $DIFF seconds
+echo Fit took $DIFF seconds
 '''.format(galaxy_id, galaxy_number, galaxy_number))
 
 
@@ -260,7 +276,7 @@ def write_out_galaxies(**kwargs):
             list_of_galaxies = partitioned_list[index]
             # Do we need to close the file down?
             if len(list_of_galaxies) == 0 and output_file is not None:
-                output_file.close()
+                close_file(output_file)
                 output_file = None
                 continue
 
@@ -287,12 +303,12 @@ def write_out_galaxies(**kwargs):
 
             # Make sure we don't close the last one
             if index < len(partitioned_list) - 1:
-                output_file.close()
+                close_file(output_file)
                 output_file = None
 
     # Close the last file
     if output_file is not None:
-        output_file.close()
+        close_file(output_file)
 
 
 def main():
@@ -305,7 +321,7 @@ def main():
     parser.add_argument('--get_infrared_colors', help='the get_infrared_colors executable name', default='get_infrared_colors')
     parser.add_argument('--time_infrared_colors', type=int, help='the time (in minutes) for get_infrared_colors to run', default=2)
     parser.add_argument('--time_optical_colors', type=int, help='the time (in minutes) for get_optical_colors to run', default=2)
-    parser.add_argument('--time_fit', type=int, help='the time to perform a fit', default=4)
+    parser.add_argument('--time_fit', type=int, help='the time to perform a fit', default=5)
     parser.add_argument('--wall_time', type=int, help='the wall time (in minutes)', default=180)
     parser.add_argument('--has_header_row', action='store_true', help='does the input file have a header row', default=False)
     parser.add_argument('--separator', help='what separator does the file use', default=',')
