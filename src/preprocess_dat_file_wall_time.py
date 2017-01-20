@@ -44,6 +44,7 @@ def write_header(output_file, directory_name, magphys_directory, run, magphys_li
 # Use MagPhys to process one pixel
 #
 OVERALL_START=$(date +%s)
+echo task,actual,expected > timings.csv
 
 export magphys={1}/magphys
 export scratch={0}
@@ -61,8 +62,18 @@ export USER_OBS=$scratch/mygals.dat
 '''.format(directory_name, magphys_directory, run, magphys_library))
 
 
-def write_model_generation(output_file, redshift, get_infrared_colors):
+def write_model_generation(output_file, redshift, get_infrared_colors, accumulated_wall_time, time_optic_colors):
+    accumulated_wall_time_seconds = accumulated_wall_time * 60
     output_file.write('''
+# Timing information
+NOW=$(date +%s)
+DIFF=$(echo "$NOW - $OVERALL_START" | bc)
+echo '----'
+echo Wall time actual $DIFF seconds
+echo Wall time expected {2} seconds
+echo '----'
+echo get_optic_colors,$DIFF,{2} >> timings.csv
+
 # Create the models
 echo "{0}
 70.0,0.3,0.7" > redshift
@@ -77,6 +88,15 @@ END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 echo get_optic_colors took $DIFF seconds
 
+# Timing information
+NOW=$(date +%s)
+DIFF=$(echo "$NOW - $OVERALL_START" | bc)
+echo '----'
+echo Wall time actual $DIFF seconds
+echo Wall time expected {3} seconds
+echo '----'
+echo {1},$DIFF,{3} >> timings.csv
+
 START=$(date +%s)
 
 cat redshift | $magphys/{1}
@@ -85,7 +105,7 @@ END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 echo {1} took $DIFF seconds
 
-'''.format(redshift, get_infrared_colors))
+'''.format(redshift, get_infrared_colors, accumulated_wall_time_seconds, accumulated_wall_time_seconds + time_optic_colors * 60))
 
 
 def write_fi(output_file):
@@ -111,27 +131,39 @@ if ''')
 
 def write_rm_lbr(output_file):
     output_file.write('''
+
 # Remove any models
 /bin/rm -f *.lbr
+
 ''')
 
 
-def close_file(output_file):
+def close_file(output_file, accumulated_wall_time):
     output_file.write('''
-# Remove any models
-/bin/rm -f *.lbr
-
-
 END=$(date +%s)
 DIFF=$(echo "$END - $OVERALL_START" | bc)
 echo '------------'
-echo Total run tool $DIFF seconds
-''')
+echo Total wall time actual $DIFF seconds
+echo Total wall time expected {0} seconds
+echo '------------'
+echo total,$DIFF,{0} >> timings.csv
+
+'''.format(accumulated_wall_time * 60))
     output_file.close()
 
 
-def write_run_magphys(output_file, galaxy_id, galaxy_number):
+def write_run_magphys(output_file, galaxy_id, galaxy_number, accumulated_wall_time):
     output_file.write('''
+# Timing information
+NOW=$(date +%s)
+DIFF=$(echo "$NOW - $OVERALL_START" | bc)
+echo '----'
+echo Wall time actual $DIFF seconds
+echo Wall time expected {3} seconds
+echo '----'
+echo fit,$DIFF,{3} >> timings.csv
+
+
 START=$(date +%s)
 if [ ! -f {2}.sed ]; then
   echo "processing {0} - {1}"
@@ -142,7 +174,7 @@ fi
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 echo Fit took $DIFF seconds
-'''.format(galaxy_id, galaxy_number, galaxy_number))
+'''.format(galaxy_id, galaxy_number, galaxy_number, accumulated_wall_time * 60))
 
 
 def write_data_file(output_file, redshift, lines):
@@ -276,7 +308,7 @@ def write_out_galaxies(**kwargs):
             list_of_galaxies = partitioned_list[index]
             # Do we need to close the file down?
             if len(list_of_galaxies) == 0 and output_file is not None:
-                close_file(output_file)
+                close_file(output_file, accumulated_wall_time)
                 output_file = None
                 continue
 
@@ -290,11 +322,11 @@ def write_out_galaxies(**kwargs):
             write_check_we_have_something_to_do(output_file, list_of_galaxies)
 
             write_data_file(output_file, redshift, list_of_galaxies)
-            write_model_generation(output_file, redshift, get_infrared_colors)
+            write_model_generation(output_file, redshift, get_infrared_colors, accumulated_wall_time, time_optical_colors)
             accumulated_wall_time += time_infrared_colors + time_optical_colors
             galaxy_id = 1
             for line in list_of_galaxies:
-                write_run_magphys(output_file, galaxy_id, line[0])
+                write_run_magphys(output_file, galaxy_id, line[0], accumulated_wall_time)
                 galaxy_id += 1
                 accumulated_wall_time += time_fit
 
@@ -303,12 +335,12 @@ def write_out_galaxies(**kwargs):
 
             # Make sure we don't close the last one
             if index < len(partitioned_list) - 1:
-                close_file(output_file)
+                close_file(output_file, accumulated_wall_time)
                 output_file = None
 
     # Close the last file
     if output_file is not None:
-        close_file(output_file)
+        close_file(output_file, accumulated_wall_time)
 
 
 def main():
