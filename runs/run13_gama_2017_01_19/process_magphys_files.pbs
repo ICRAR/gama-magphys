@@ -8,4 +8,4 @@
 cd ~
 
 source /home/kevin/virt_env/pogs_analysis/bin/activate
-/home/kevin/virt_env/pogs_analysis/bin/python /home/kevin/gama-magphys/src/process_gama_output.py 13 /mnt/gamad/kevin/run13_gama
+/home/kevin/virt_env/pogs_analysis/bin/python /home/kevin/gama-magphys/src/process_gama_output.py 13 /mnt/gamad/kevin/run13_gama_2017_01_19

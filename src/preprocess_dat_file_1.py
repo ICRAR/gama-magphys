@@ -201,6 +201,7 @@ class Preprocess:
         self._wall_time = kwargs['wall_time'] - int(kwargs['wall_time'] * 0.05)  # Take off 5%
         self._separator = kwargs['separator']
         self._has_header_row = kwargs['has_header_row']
+        self._redshift_group_by_length = {}
 
     @staticmethod
     def _write_check_we_have_something_to_do(output_file, galaxies):
@@ -280,7 +281,14 @@ echo "# Header" > mygals.dat
                     LOG.exception('Error processing line {0} - {1}'.format(line_number, line))
 
                 line_number += 1
-        return galaxies_by_red_shift
+
+        for redshift_group in galaxies_by_red_shift.values():
+            length = len(redshift_group.list_of_galaxies)
+            elements = self._redshift_group_by_length.get(length)
+            if elements is None:
+                elements = []
+                self._redshift_group_by_length[length] = elements
+            elements.append(redshift_group)
 
     def _open_outputfile(self, directory_counter):
         directory_name = os.path.join(self._dir_out_root_name, '{0:06d}'.format(directory_counter))
@@ -317,71 +325,66 @@ echo "# Header" > mygals.dat
         partitioned_list.append(sub_list)
         return partitioned_list
 
-    def _write_out_galaxies(self, galaxies_by_red_shift):
+    def _get_redshift_group(self, accumulated_wall_time):
+        if accumulated_wall_time == 0:
+            # TODO: Get the biggest list
+            pass
+        else:
+            time_left = self._wall_time - accumulated_wall_time - self._time_infrared_colors - self._time_optical_colors
+            length = time_left / self._time_fit
+
+
+        pass
+
+    def _write_out_galaxies(self):
         directory_counter = 0
         output_file = None
         accumulated_wall_time = 0
-        LOG.info('{0} entries to process'.format(len(galaxies_by_red_shift.keys())))
 
-        for redshift in galaxies_by_red_shift.keys():
-            redshift_group = galaxies_by_red_shift[redshift]
+        while len(self._redshift_group_by_length) > 0:
+            redshift_group = self._get_redshift_group(accumulated_wall_time)
 
-            # Partition the list
-            partitioned_list = self._partition_list(redshift_group.list_of_galaxies, accumulated_wall_time)
+            if output_file is None:
+                output_file, directory_name = self._open_outputfile(directory_counter)
+                output_file.write(HEADER.format(directory_name, self._dir_magphys, self._run, self._magphys_library))
+                directory_counter += 1
 
-            index = 0
-            for list_of_galaxies in partitioned_list:
-                # Update the index
-                index += 1
+            # Log what we are adding
+            LOG.info('Adding redshift:{0} galaxies:{1}'.format(redshift_group.redshift, len(redshift_group.list_of_galaxies)))
 
-                # Do we need to close the file down?
-                if len(list_of_galaxies) == 0 and output_file is not None:
-                    self._close_file(output_file, accumulated_wall_time)
-                    output_file = None
-                    continue
+            # Check if we need to build models
+            self._write_check_we_have_something_to_do(output_file, redshift_group.list_of_galaxies)
 
-                if output_file is None:
-                    output_file, directory_name = self._open_outputfile(directory_counter)
-                    output_file.write(HEADER.format(directory_name, self._dir_magphys, self._run, self._magphys_library))
-                    directory_counter += 1
-                    accumulated_wall_time = 0
+            self._write_data_file(output_file, redshift_group.list_of_galaxies)
+            output_file.write(MODEL_GENERATION.format(redshift_group.redshift,
+                                                      self._get_infrared_colors,
+                                                      accumulated_wall_time,
+                                                      accumulated_wall_time + self._time_optical_colors,
+                                                      self._time_optical_colors,
+                                                      self._time_infrared_colors))
+            accumulated_wall_time += self._time_infrared_colors + self._time_optical_colors
+            galaxy_id = 1
+            for galaxy in redshift_group.list_of_galaxies:
+                output_file.write(RUN_MAGPHYS.format(galaxy_id, galaxy.galaxy_id, accumulated_wall_time, self._time_fit))
+                galaxy_id += 1
+                accumulated_wall_time += self._time_fit
 
-                # Log what we are adding
-                LOG.info('Adding redshift:{0} galaxies:{1}'.format(redshift, len(list_of_galaxies)))
+            output_file.write(FI)
+            output_file.write(RM_LBR)
 
-                # Check if we need to build models
-                self._write_check_we_have_something_to_do(output_file, list_of_galaxies)
-
-                self._write_data_file(output_file, list_of_galaxies)
-                output_file.write(MODEL_GENERATION.format(redshift,
-                                                          self._get_infrared_colors,
-                                                          accumulated_wall_time,
-                                                          accumulated_wall_time + self._time_optical_colors,
-                                                          self._time_optical_colors,
-                                                          self._time_infrared_colors))
-                accumulated_wall_time += self._time_infrared_colors + self._time_optical_colors
-                galaxy_id = 1
-                for galaxy in list_of_galaxies:
-                    output_file.write(RUN_MAGPHYS.format(galaxy_id, galaxy.galaxy_id, accumulated_wall_time, self._time_fit))
-                    galaxy_id += 1
-                    accumulated_wall_time += self._time_fit
-
-                output_file.write(FI)
-                output_file.write(RM_LBR)
-
-                # Make sure we don't close the last one
-                if index < len(partitioned_list):
-                    self._close_file(output_file, accumulated_wall_time)
-                    output_file = None
+            # Make sure we close it if we can't fit any more in
+            if self._time_fit + self._time_infrared_colors + self._time_optical_colors + accumulated_wall_time > self._wall_time:
+                self._close_file(output_file, accumulated_wall_time)
+                output_file = None
+                accumulated_wall_time = 0
 
         # Close the last file
         if output_file is not None:
             self._close_file(output_file, accumulated_wall_time)
 
     def process_file(self):
-        galaxies_by_red_shift = self._get_galaxies_by_red_shift()
-
-        self._write_out_galaxies(galaxies_by_red_shift)
+        self._get_galaxies_by_red_shift()
+        self._write_out_galaxies()
 
 
 def main():

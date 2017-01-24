@@ -1,5 +1,5 @@
 USE gama_sed;
-INSERT INTO run (run_id, description) VALUES (13, 'Run based on the file GAMA and bc03');
+INSERT INTO run (run_id, description) VALUES (13, 'Run based on the file GAMA and bc03 2017-01-19');
 
 INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (13, 'fuv'     , 0.1535, 123 );
 INSERT INTO filter (run_id, name, eff_lambda, filter_number) VALUES (13, 'nuv'     , 0.2301, 124 );
