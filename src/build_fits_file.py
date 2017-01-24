@@ -41,7 +41,10 @@ VALUES = ['best_fit', 'percentile2_5', 'percentile16', 'percentile50', 'percenti
 def create_hdu(rows, map_parameter_name):
     c1 = pyfits.Column(name='gama_id', format='8A')
     c2 = pyfits.Column(name='redshift', format='E')
-    columns = [c1, c2]
+    c3 = pyfits.Column(name='i_sfh', format='E')
+    c4 = pyfits.Column(name='i_ir', format='E')
+    c5 = pyfits.Column(name='chi2', format='E')
+    columns = [c1, c2, c3, c4, c5]
     for i in range(0, len(map_parameter_name)):
         for value in VALUES:
             column = pyfits.Column(name='{0}[{1}]'.format(map_parameter_name[i], value), format='E')
@@ -90,6 +93,9 @@ def main(run_id, output_file, db_user):
             LOG.info('Processing {0} of {3}: {1}, {2}'.format(count, galaxy[GALAXY.c.gama_id], galaxy[GALAXY.c.redshift], total))
         add(data_columns[0], [count], galaxy[GALAXY.c.gama_id])
         add(data_columns[1], [count], galaxy[GALAXY.c.redshift])
+        add(data_columns[2], [count], galaxy[GALAXY.c.i_sfh])
+        add(data_columns[3], [count], galaxy[GALAXY.c.i_ir])
+        add(data_columns[4], [count], galaxy[GALAXY.c.chi2])
         load_data(connection, galaxy[GALAXY.c.galaxy_id], data_columns, count)
         count += 1
     hdu.writeto(output_file, clobber=True)
