@@ -40,7 +40,7 @@ echo '----'
 echo Wall time actual $DIFF seconds
 echo Wall time expected {2} seconds
 echo '----'
-echo way_fit,$DIFF,{2} >> timings.csv
+echo way_fit,$DIFF,{2},{4} >> timings.csv
 
 START=$(date +%s)
 if [ ! -f {1}.sed ]; then
@@ -52,7 +52,7 @@ fi
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 echo Fit took $DIFF seconds
-echo fit,$DIFF,{3} >> timings.csv
+echo fit,$DIFF,{3},{4} >> timings.csv
 '''
 
 CLOSE_FILE = '''
@@ -62,7 +62,7 @@ echo '------------'
 echo Total wall time actual $DIFF seconds
 echo Total wall time expected {0} seconds
 echo '------------'
-echo total,$DIFF,{0} >> timings.csv
+echo total,$DIFF,{0},NaN >> timings.csv
 
 '''
 
@@ -92,7 +92,7 @@ echo '----'
 echo Wall time actual $DIFF seconds
 echo Wall time expected {2} seconds
 echo '----'
-echo way_get_optic_colors,$DIFF,{2} >> timings.csv
+echo way_get_optic_colors,$DIFF,{2},{0} >> timings.csv
 
 # Create the models
 echo "{0}
@@ -107,7 +107,7 @@ cat redshift | $magphys/get_optic_colors
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 echo get_optic_colors took $DIFF seconds
-echo get_optic_colors,$DIFF,{4} >> timings.csv
+echo get_optic_colors,$DIFF,{4},{0} >> timings.csv
 
 # Timing information
 NOW=$(date +%s)
@@ -116,7 +116,7 @@ echo '----'
 echo Wall time actual $DIFF seconds
 echo Wall time expected {3} seconds
 echo '----'
-echo way_{1},$DIFF,{3} >> timings.csv
+echo way_{1},$DIFF,{3},{0} >> timings.csv
 
 START=$(date +%s)
 
@@ -125,7 +125,7 @@ cat redshift | $magphys/{1}
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
 echo {1} took $DIFF seconds
-echo {1},$DIFF,{5} >> timings.csv
+echo {1},$DIFF,{5},{0} >> timings.csv
 
 '''
 
@@ -133,7 +133,7 @@ HEADER = '''#!/bin/bash
 # Use MagPhys to process one pixel
 #
 OVERALL_START=$(date +%s)
-echo task,actual,expected > timings.csv
+echo task,actual,expected,redshift > timings.csv
 
 export magphys={1}/magphys
 export scratch={0}
@@ -282,6 +282,7 @@ echo "# Header" > mygals.dat
 
                 line_number += 1
 
+        # Convert to a map based on length
         for redshift_group in galaxies_by_red_shift.values():
             length = len(redshift_group.list_of_galaxies)
             elements = self._redshift_group_by_length.get(length)
@@ -290,7 +291,7 @@ echo "# Header" > mygals.dat
                 self._redshift_group_by_length[length] = elements
             elements.append(redshift_group)
 
-    def _open_outputfile(self, directory_counter):
+    def _open_output_file(self, directory_counter):
         directory_name = os.path.join(self._dir_out_root_name, '{0:06d}'.format(directory_counter))
         if not os.path.exists(directory_name):
             os.makedirs(directory_name)
@@ -326,15 +327,58 @@ echo "# Header" > mygals.dat
         return partitioned_list
 
     def _get_redshift_group(self, accumulated_wall_time):
+        time_left = self._wall_time - accumulated_wall_time - self._time_infrared_colors - self._time_optical_colors
+        items = time_left / self._time_fit
+
         if accumulated_wall_time == 0:
-            # TODO: Get the biggest list
-            pass
+            # Get the biggest list
+            max_length = self._get_biggest_list()
+
+            if max_length is not None:
+                return self.get_slice_of_galaxies(max_length, items)
+            else:
+                return None
         else:
-            time_left = self._wall_time - accumulated_wall_time - self._time_infrared_colors - self._time_optical_colors
-            length = time_left / self._time_fit
+            if items in self._redshift_group_by_length:
+                return self.get_slice_of_galaxies(items, items)
+            else:
+                max_length = self._get_biggest_list()
+                if max_length is not None:
+                    return self.get_slice_of_galaxies(max_length, items)
+                else:
+                    return None
 
+    def get_slice_of_galaxies(self, length_key, items):
+        list_redshift_group = self._redshift_group_by_length.get(length_key)
+        if len(list_redshift_group) == 1:
+            # Last one
+            self._redshift_group_by_length.pop(length_key)
 
-        pass
+        redshift_group = list_redshift_group.pop()
+        if len(redshift_group.list_of_galaxies) <= items:
+            return redshift_group
+        else:
+            new_list = []
+            for i in range(0, items):
+                new_list.append(redshift_group.list_of_galaxies.pop())
+
+            length_key = len(redshift_group.list_of_galaxies)
+            elements = self._redshift_group_by_length.get(length_key)
+            if elements is None:
+                elements = []
+                self._redshift_group_by_length[length_key] = elements
+            elements.append(redshift_group)
+
+            return RedshiftGroup(redshift_group.redshift, new_list)
+
+    def _get_biggest_list(self):
+        max_length = None
+        for length in self._redshift_group_by_length.keys():
+            if max_length is None:
+                max_length = length
+            elif length > max_length:
+                max_length = length
+        return max_length
 
     def _write_out_galaxies(self):
         directory_counter = 0
@@ -345,7 +389,7 @@ echo "# Header" > mygals.dat
             redshift_group = self._get_redshift_group(accumulated_wall_time)
 
             if output_file is None:
-                output_file, directory_name = self._open_outputfile(directory_counter)
+                output_file, directory_name = self._open_output_file(directory_counter)
                 output_file.write(HEADER.format(directory_name, self._dir_magphys, self._run, self._magphys_library))
                 directory_counter += 1
 
@@ -365,7 +409,7 @@ echo "# Header" > mygals.dat
             accumulated_wall_time += self._time_infrared_colors + self._time_optical_colors
             galaxy_id = 1
             for galaxy in redshift_group.list_of_galaxies:
-                output_file.write(RUN_MAGPHYS.format(galaxy_id, galaxy.galaxy_id, accumulated_wall_time, self._time_fit))
+                output_file.write(RUN_MAGPHYS.format(galaxy_id, galaxy.galaxy_id, accumulated_wall_time, self._time_fit, redshift_group.redshift))
                 galaxy_id += 1
                 accumulated_wall_time += self._time_fit
 

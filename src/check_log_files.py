@@ -64,6 +64,7 @@ class LogFile:
     def full_path_name(self):
         return self._full_path_name
 
+
 class SlurmOutput:
     def __init__(self, file_name):
         self._file_name = file_name
