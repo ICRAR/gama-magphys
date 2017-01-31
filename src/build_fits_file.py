@@ -58,7 +58,7 @@ def add(data, count, value):
 
 
 def load_data(connection, galaxy_id, data, count):
-    field = 2
+    field = 5
     for result in connection.execute(select([RESULT]).where(RESULT.c.galaxy_id == galaxy_id).order_by(RESULT.c.parameter_name_id)):
         add(data[field], [count], result[RESULT.c.best_fit])
         add(data[field+1], [count], result[RESULT.c.percentile2_5])
