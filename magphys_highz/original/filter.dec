@@ -22,7 +22,7 @@ c	common /c_filter/ iread,jread,nf,np(mxft),r(mxwf,mxft,2)
 c	Modified 11-MAY-1999 to adapt to new format
 c	parameter (mxft=250,mxwp=15000,naux=16000)
 	parameter (mxft=500,mxwp=200000,naux=300000)
-	character*75 fid(0:mxft)
+	character*64 fid(0:mxft)
 	integer iread,jread,nf,ltot,ni(mxft),nl(mxft),np(mxft)
 	real r(mxwp,2)
 	common /c_filter/ iread,jread,ireset,zlast,nf,ltot,ni,nl,np,fid,r

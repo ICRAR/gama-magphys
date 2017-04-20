@@ -1,0 +1,4 @@
+configobj
+fitsio
+pyfits
+sqlalchemy

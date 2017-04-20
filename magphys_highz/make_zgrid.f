@@ -5,7 +5,7 @@ c       Authors :   E. da Cunha & S. Charlot
 c       Latest revision :   Sep. 16th, 2010
 c       ---------------------------------------------------------------------------
 c       Makes a grid of redshift adapted to current data set
-c       OUTPUT: 'zlibs.dat' with the redhifts at which the model libraries 
+c       OUTPUT: 'zlibs.dat' with the redhifts at which the model libraries
 c       will be computed using the codes 'get_optic_colors' and 'get_infrared_colors'
 c
 c       version Feb 16, 2011
@@ -22,12 +22,12 @@ c       ========================================================================
 	character*10 gal_name(galmax)
 	character*12 filt_name(nmax)
 	real*8 redshift(galmax),lambda_eff(nmax)
-	real*8 flux_obs(galmax,nmax),sigma(galmax,nmax)	
+	real*8 flux_obs(galmax,nmax),sigma(galmax,nmax)
 	parameter(nzmax=100000)
 	integer fbin(nzmax)
 	real*8 zmin,zmax,zgrid(nzmax)
 	real*8 zi(nzmax),za(nzmax),dz,aux
-	character filters*80,obs*80
+	character filters*512,obs*512
 
 
 c       READ FILTER FILE: e.g. "filters.dat"
@@ -88,7 +88,7 @@ c       dz: redshift interval
 	   enddo
 	   zmin=0.01*dnint(zmin*100)-dz
 	   zmax=0.01*dnint(zmax*100)+dz
-	
+
 	   igrid=1
 	   zgrid(igrid)=zmin
 	   do while (zgrid(igrid).le.zmax)
@@ -107,9 +107,9 @@ c       if fbin(i)=0 -> at least one galaxy with redshift at zgrid(i)
 c       --> make library
 
 	   do i=1,ngrid
-	      fbin(i)=0 
+	      fbin(i)=0
 	   enddo
-	   
+
 	   do j=1,n_obs
 	      do i=1,ngrid
 		 if (redshift(j).ge.zi(i).and.redshift(j).lt.za(i)) then
@@ -117,7 +117,7 @@ c       --> make library
 		 endif
 	      enddo
 	   enddo
-	   	   
+
 	   j=0
 	   do i=1,ngrid
 	      if (fbin(i).gt.0) then
@@ -126,15 +126,15 @@ c       --> make library
 	      endif
 	   enddo
  211	   format(i6,f8.4)
-	   
+
 	   else if (ans.eq.'n'.or.ans.eq.'N') then
 	      write (6,'(x,a,$)') 'Building formatted file with galaxy redshifts...'
 
 	      do i=1,n_obs
 		 write(21,211) i,redshift(i)
 	      enddo
-		 
+
 	   endif
-	      
+
  1	   stop
 	end

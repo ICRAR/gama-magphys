@@ -13,7 +13,7 @@ c               - redshift
 c               - filter file - define USER_FILTERS in
 
 c       OUTPUT: .lbr file containing: physical parameters + magnitudes
-c       
+c
 c       REVISION HISTORY:
 c       - Aug. 2009 - L. Dunne:
 c       program has been modified to fix bugs with the MIPS filters. For SHADES/SWIRE
@@ -26,7 +26,7 @@ c       number of points in SED: 6450 -> 6750
 c       ===========================================================================
 
 	implicit none
-        character infile*80,outfile*80,user_filt*80
+        character infile*512,outfile*512,user_filt*512
         integer niw,io,nfilt_use,nmax,iz,index
 	parameter(nmax=50)
 	character*10 filt_name(nmax)
@@ -115,7 +115,7 @@ c       count nr of filters to use: nfilt_use
 	do k=1,nfilt_use
 	   filt_id_use(k)=filt_id(k_use(k))
 	enddo
-	  
+
 c       Output File Header
 c       Store cosmological parameters
 c       List of model parameters and predicted fluxes
@@ -139,7 +139,7 @@ c       List of model parameters and predicted fluxes
      +  '   xiC_tot',   !16: Ld(cold)/Ld(tot)
      +  '    ',filter_header  !17--nfilt_use: model AB magnitudes at redshift z
 
-c       ---------------------------------------------------------------------------       
+c       ---------------------------------------------------------------------------
 c       Read .bin file (300 models)
 c       Compute magnitude for each model
 c       Store parameters + magnitudes of each model in output file
@@ -229,7 +229,7 @@ c       ========================================================================
 c	Reads filter response functions from (binary) file FILTERBIN.RES
 c       ---------------------------------------------------------------------------
 	INCLUDE 'filter.dec'
-	character filtfile*80
+	character filtfile*512
 	close (81)
 
 c	Get file name from environment variable FILTERS
@@ -250,7 +250,7 @@ c	Get file name from environment variable FILTERS
 
 
 c       ===========================================================================
-	FUNCTION F_MEAN(I,X,Y,N,Z)	
+	FUNCTION F_MEAN(I,X,Y,N,Z)
 c       ===========================================================================
 c       Returns mean flux >>> (Fnu) <<< in ith filter (/Hz)
 c       As: f_nu=int(dnu Fnu Rnu/h*nu)/int(dnu Rnu/h*nu)
@@ -378,7 +378,7 @@ c	Store filter No. and ending point in sorted arrays
 c	Use kth filter in extracted filter array
 c	Interpolate sed at shifted wavelength of filter
 2	m=0
-	l=0	   
+	l=0
 	do j=pos_i(k),pos_f(k)
 	   m=m+1
 c	   take wavelength in detector frame
@@ -687,7 +687,7 @@ c       ========================================================================
 	SUBROUTINE SORT2(N,RA,RB)
 c       ===========================================================================
 c	Sorts array ra(n)
-c       ---------------------------------------------------------------------------      
+c       ---------------------------------------------------------------------------
 	DIMENSION RA(N),RB(N)
 	L=N/2+1
 	IR=N
@@ -763,7 +763,7 @@ c       ========================================================================
 c       ===========================================================================
 c	Integrates function y(x)
 c       n : number of points
-c       ---------------------------------------------------------------------------  
+c       ---------------------------------------------------------------------------
 	REAL X(N),Y(N)
 	TRAPZ1=0.
 	IF (N.LE.1) RETURN
@@ -781,7 +781,7 @@ c       ========================================================================
 c	Finds L such that XX(L).lt.X0.lt.XX(L+1)
 c       n1 : start point
 c       n2 : end point
-c       ---------------------------------------------------------------------------  
+c       ---------------------------------------------------------------------------
 	DIMENSION XX(N2)
 	X(I)=XX(N1+I-1)
 	N=N2-N1+1

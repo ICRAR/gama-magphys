@@ -45,7 +45,7 @@ echo way_fit,$DIFF,{2} >> timings.csv
 START=$(date +%s)
 if [ ! -f {1}.sed ]; then
   echo "processing {0} - {1}"
-  echo {0} | $magphys/fit_sed_zz2_uplimits
+  echo {0} | $magphys/fit_sed_highz
 else
   echo "skipping {0} - {1}"
 fi
@@ -90,9 +90,9 @@ NOW=$(date +%s)
 DIFF=$(echo "$NOW - $OVERALL_START" | bc)
 echo '----'
 echo Wall time actual $DIFF seconds
-echo Wall time expected {2} seconds
+echo Wall time expected {1} seconds
 echo '----'
-echo way_get_optic_colors,$DIFF,{2} >> timings.csv
+echo way_get_optic_colors_highz,$DIFF,{1} >> timings.csv
 
 # Create the models
 echo "{0}
@@ -102,30 +102,30 @@ echo N | $magphys/make_zgrid
 
 START=$(date +%s)
 
-cat redshift | $magphys/get_optic_colors
+cat redshift | $magphys/get_optic_colors_highz
 
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
-echo get_optic_colors took $DIFF seconds
-echo get_optic_colors,$DIFF,{4} >> timings.csv
+echo get_optic_colors_highz took $DIFF seconds
+echo get_optic_colors_highz,$DIFF,{3} >> timings.csv
 
 # Timing information
 NOW=$(date +%s)
 DIFF=$(echo "$NOW - $OVERALL_START" | bc)
 echo '----'
 echo Wall time actual $DIFF seconds
-echo Wall time expected {3} seconds
+echo Wall time expected {2} seconds
 echo '----'
-echo way_{1},$DIFF,{3} >> timings.csv
+echo way_get_infrared_colors_highz,$DIFF,{2} >> timings.csv
 
 START=$(date +%s)
 
-cat redshift | $magphys/{1}
+cat redshift | $magphys/get_infrared_colors_highz
 
 END=$(date +%s)
 DIFF=$(echo "$END - $START" | bc)
-echo {1} took $DIFF seconds
-echo {1},$DIFF,{5} >> timings.csv
+echo get_infrared_colors_highz took $DIFF seconds
+echo get_infrared_colors_highz,$DIFF,{4} >> timings.csv
 
 '''
 
@@ -135,15 +135,15 @@ HEADER = '''#!/bin/bash
 OVERALL_START=$(date +%s)
 echo task,actual,expected > timings.csv
 
-export magphys={1}/magphys
+export magphys={1}
 export scratch={0}
 cd $scratch
 
-export FILTERS={1}/runs/{2}/FILTERBIN.RES
-export OPTILIB=$magphys/OptiLIB_{3}.bin
-export OPTILIBIS=$magphys/OptiLIBis_{3}.bin
-export IRLIB=$magphys/InfraredLIB.bin
-export USER_FILTERS={1}/runs/{2}/filters.dat
+export FILTERS={1}/FILTERBIN.RES
+export OPTILIB=$magphys/OptiLIB_bc03_highz.bin
+export OPTILIBIS=$magphys/OptiLIBis_bc03_highz.bin
+export IRLIB=$magphys/InfraredLIB_highz.bin
+export USER_FILTERS={2}
 export USER_OBS=$scratch/mygals.dat
 
 /bin/rm -f *.lbr
@@ -189,12 +189,10 @@ class RedshiftGroup:
 
 class Preprocess:
     def __init__(self, **kwargs):
-        self._dat_file_name = kwargs['dat_file_name']
+        self._csv_file_name = kwargs['csv_file_name']
         self._dir_out_root_name = kwargs['dir_out_root_name']
         self._dir_magphys = kwargs['dir_magphys']
-        self._run = kwargs['run']
-        self._magphys_library = kwargs['magphys_library']
-        self._get_infrared_colors = kwargs['get_infrared_colors']
+        self._filters_dat = kwargs['filters_dat']
         self._time_infrared_colors = kwargs['time_infrared_colors']
         self._time_optical_colors = kwargs['time_optical_colors']
         self._time_fit = kwargs['time_fit']
@@ -230,8 +228,8 @@ echo "# Header" > mygals.dat
             output_file.write('echo "{0} {1} {2}" >> mygals.dat\n'.format(galaxy.galaxy_id, galaxy.redshift, galaxy.filter_values))
 
     def check_exists(self):
-        if not os.path.exists(self._dat_file_name):
-            LOG.error('The file {0} does not exist'.format(self._dat_file_name))
+        if not os.path.exists(self._csv_file_name):
+            LOG.error('The file {0} does not exist'.format(self._csv_file_name))
             return False
 
         if not os.path.isdir(self._dir_out_root_name):
@@ -241,13 +239,13 @@ echo "# Header" > mygals.dat
         return True
 
     def _get_galaxies_by_red_shift(self):
-        LOG.info('Reading {0}'.format(self._dat_file_name))
+        LOG.info('Reading {0}'.format(self._csv_file_name))
         galaxies_by_red_shift = {}
         _0001 = Decimal('.0001')
         _0 = Decimal('0.0')
         _6 = Decimal('6.0')
 
-        with open(self._dat_file_name, 'r') as dat_file:
+        with open(self._csv_file_name, 'r') as dat_file:
             line_number = 1
             for line in dat_file:
                 if line_number == 1 and self._has_header_row:
@@ -342,7 +340,13 @@ echo "# Header" > mygals.dat
 
                 if output_file is None:
                     output_file, directory_name = self._open_outputfile(directory_counter)
-                    output_file.write(HEADER.format(directory_name, self._dir_magphys, self._run, self._magphys_library))
+                    output_file.write(
+                        HEADER.format(
+                            directory_name,
+                            self._dir_magphys,
+                            self._filters_dat
+                        )
+                    )
                     directory_counter += 1
                     accumulated_wall_time = 0
 
@@ -353,12 +357,15 @@ echo "# Header" > mygals.dat
                 self._write_check_we_have_something_to_do(output_file, list_of_galaxies)
 
                 self._write_data_file(output_file, list_of_galaxies)
-                output_file.write(MODEL_GENERATION.format(redshift,
-                                                          self._get_infrared_colors,
-                                                          accumulated_wall_time,
-                                                          accumulated_wall_time + self._time_optical_colors,
-                                                          self._time_optical_colors,
-                                                          self._time_infrared_colors))
+                output_file.write(
+                    MODEL_GENERATION.format(
+                        redshift,
+                        accumulated_wall_time,
+                        accumulated_wall_time + self._time_optical_colors,
+                        self._time_optical_colors,
+                        self._time_infrared_colors
+                    )
+                )
                 accumulated_wall_time += self._time_infrared_colors + self._time_optical_colors
                 galaxy_id = 1
                 for galaxy in list_of_galaxies:
@@ -386,27 +393,24 @@ echo "# Header" > mygals.dat
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('dat_file_name', nargs=1, help='the dat file to use')
-    parser.add_argument('dir_out_root_name', nargs=1, help='where the files are written')
-    parser.add_argument('magphys', nargs=1, help='where the magphys files are to be found')
-    parser.add_argument('run', nargs=1, help='where the filters.dat file is to be found')
-    parser.add_argument('magphys_library', nargs=1, help='which MAGPHYS optical library to use', choices=['cb07', 'bc03'])
-    parser.add_argument('--get_infrared_colors', help='the get_infrared_colors executable name', default='get_infrared_colors')
-    parser.add_argument('--time_infrared_colors', type=int, help='the time (in seconds) for get_infrared_colors to run', default=2 * 60)
-    parser.add_argument('--time_optical_colors', type=int, help='the time (in seconds) for get_optical_colors to run', default=2 * 60)
-    parser.add_argument('--time_fit', type=int, help='the time (in seconds) to perform a fit', default=5 * 60)
+    parser.add_argument('csv_file_name', nargs=1, help='the csv file to use')
+    parser.add_argument('dir_out_root_name', nargs=1, help='where the files are to be written')
+    parser.add_argument('magphys', nargs=1, help='where the magphys executable files are to be found')
+    parser.add_argument('filters_dat', nargs=1, help='where the filters.dat file is to be found')
+
+    parser.add_argument('--time_infrared_colors', type=int, help='the time (in seconds) for get_infrared_colors to run', default=1 * 60)
+    parser.add_argument('--time_optical_colors', type=int, help='the time (in seconds) for get_optical_colors to run', default=1 * 60)
+    parser.add_argument('--time_fit', type=int, help='the time (in seconds) to perform a fit', default=1 * 60)
     parser.add_argument('--wall_time', type=int, help='the wall time (in seconds)', default=180 * 60)
     parser.add_argument('--has_header_row', action='store_true', help='does the input file have a header row', default=False)
     parser.add_argument('--separator', help='what separator does the file use', default=',')
     args = parser.parse_args()
 
     preprocess = Preprocess(
-        dat_file_name=args.dat_file_name[0],
+        csv_file_name=args.csv_file_name[0],
         dir_out_root_name=args.dir_out_root_name[0],
         dir_magphys=args.magphys[0],
-        run=args.run[0],
-        magphys_library=args.magphys_library[0],
-        get_infrared_colors=args.get_infrared_colors,
+        filters_dat=args.filters_dat[0],
         time_infrared_colors=args.time_infrared_colors,
         time_optical_colors=args.time_optical_colors,
         time_fit=args.time_fit,
