@@ -18,3 +18,8 @@ runs/run05/lambdar_variations.dat
 /magphys_highz/get_optic_colors_highz
 /magphys_highz/InfraredLIB_highz.params
 /magphys_highz/InfraredLIB_highz.bin
+/runs/3dhst/2017_04_20/goodsn/goodsn_magphys.csv
+/runs/3dhst/2017_04_20/aegis/aegis_magphys.csv
+/runs/3dhst/2017_04_20/cosmos/cosmos_magphys.csv
+/runs/3dhst/2017_04_20/uds/uds_magphys.csv
+/runs/3dhst/2017_04_20/goodss/goodss_magphys.csv
