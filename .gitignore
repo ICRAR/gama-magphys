@@ -8,3 +8,13 @@ runs/run02/forkevin.csv
 runs/run03/forkevin.csv
 runs/run04/lambdar_variations.dat
 runs/run05/lambdar_variations.dat
+/magphys_highz/OptiLIBis_bc03_highz.bin
+/magphys_highz/OptiLIBis_bc03_highz.params
+/magphys_highz/OptiLIB_bc03_highz.bin
+/magphys_highz/OptiLIB_bc03_highz.params
+/magphys_highz/make_zgrid
+/magphys_highz/get_infrared_colors_highz
+/magphys_highz/fit_sed_highz
+/magphys_highz/get_optic_colors_highz
+/magphys_highz/InfraredLIB_highz.params
+/magphys_highz/InfraredLIB_highz.bin
