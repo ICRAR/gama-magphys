@@ -399,7 +399,7 @@ def main():
     parser.add_argument('filters_dat', nargs=1, help='where the filters.dat file is to be found')
 
     parser.add_argument('--time_infrared_colors', type=int, help='the time (in seconds) for get_infrared_colors to run', default=1 * 60)
-    parser.add_argument('--time_optical_colors', type=int, help='the time (in seconds) for get_optical_colors to run', default=1 * 60)
+    parser.add_argument('--time_optical_colors', type=int, help='the time (in seconds) for get_optical_colors to run', default=3 * 60)
     parser.add_argument('--time_fit', type=int, help='the time (in seconds) to perform a fit', default=4 * 60)
     parser.add_argument('--wall_time', type=int, help='the wall time (in seconds)', default=180 * 60)
     parser.add_argument('--has_header_row', action='store_true', help='does the input file have a header row', default=False)
