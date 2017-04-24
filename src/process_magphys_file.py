@@ -31,7 +31,7 @@ LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC_FORMAT)
 
 
-class Galaxy():
+class Galaxy(object):
     def __init__(self):
         self.gama_id = None
         self.redshift = None
@@ -40,7 +40,7 @@ class Galaxy():
         self.chi2 = None
 
 
-class FilterValue():
+class FilterValue(object):
     def __init__(self):
         self.filter_id = None
         self.flux = None
@@ -48,7 +48,7 @@ class FilterValue():
         self.flux_bfm = None
 
 
-class Result():
+class Result(object):
     def __init__(self):
         self.parameter_name_id = None
         self.best_fit = None
@@ -59,7 +59,7 @@ class Result():
         self.percentile97_5 = None
 
 
-class ProcessMagphysFile():
+class ProcessMagphysFile(object):
     def __init__(self, map_filter_in, map_parameter_name_in):
         # Load the filters
         self._map_filter = map_filter_in

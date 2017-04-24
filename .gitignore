@@ -23,3 +23,4 @@ runs/run05/lambdar_variations.dat
 /runs/3dhst/2017_04_20/cosmos/cosmos_magphys.csv
 /runs/3dhst/2017_04_20/uds/uds_magphys.csv
 /runs/3dhst/2017_04_20/goodss/goodss_magphys.csv
+/magphys_highz/*.lbr
