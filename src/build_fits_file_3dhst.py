@@ -85,6 +85,7 @@ class BuildFitsFile3dhst(object):
                 result_file = join(root, match)
                 elements = root.split('/')
                 key = join(elements[-2], self._fix_numbering(match))
+                LOG.info('Adding {0}: {1}'.format(key, result_file))
                 self._files_to_process[key] = result_file
 
     def _create_fits_file(self):
@@ -115,6 +116,7 @@ class BuildFitsFile3dhst(object):
         parameter_number = 0
         row[0] = key[:-4]
         try:
+            LOG.info('Processing {0}'.format(filename))
             with open(filename) as f:
                 for line in f:
                     line_number += 1
