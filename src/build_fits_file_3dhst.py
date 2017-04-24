@@ -33,7 +33,7 @@ from os.path import join
 import numpy
 from os import walk
 
-import pyfits
+import astropy.io.fits as pyfits
 
 LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC_FORMAT)
