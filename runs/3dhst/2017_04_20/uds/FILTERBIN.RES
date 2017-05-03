@@ -1,1 +1,1 @@
-../../../../magphys_highz/FILTERBIN.RES
+../../../../magphys/FILTERBIN.RES
