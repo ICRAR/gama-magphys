@@ -39,7 +39,7 @@ LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)-15s:' + logging.BASIC_FORMAT)
 
 
-PARAMETERS = [
+PARAMETERS_HIGHZ = [
     'fmu (SFH)',
     'fmu (IR)',
     'mu',
@@ -62,14 +62,33 @@ PARAMETERS = [
     'A_V',
     'Tdust',
 ]
+PARAMETERS_NORMAL = [
+    'fmu (SFH)',
+    'fmu (IR)',
+    'mu',
+    'tau_V',
+    'sSFR_0.1Gyr',
+    'M(stars)',
+    'Ldust',
+    'T_C^ISM',
+    'T_W^BC',
+    'xi_C^tot',
+    'xi_PAH^tot',
+    'xi_MIR^tot',
+    'xi_W^tot',
+    'tau_V^ISM',
+    'M(dust)',
+    'SFR_0.1Gyr',
+]
 VALUES = ['best_fit', 'percentile2_5', 'percentile16', 'percentile50', 'percentile84', 'percentile97_5']
 
 
 class BuildFitsFile3dhst(object):
-    def __init__(self, output_file, input_root):
+    def __init__(self, output_file, input_root, high_z):
         self._map_arrays = {}
         self._output_file = output_file
         self._input_root = input_root
+        self._high_z = high_z
 
     @staticmethod
     def _fix_numbering(filename):
@@ -99,7 +118,7 @@ class BuildFitsFile3dhst(object):
         ]
 
         count = 5
-        for parameter in PARAMETERS:
+        for parameter in PARAMETERS_HIGHZ if self._high_z else PARAMETERS_NORMAL:
             for value in VALUES:
                 column = pyfits.Column(name='{0}[{1}]'.format(parameter, value), format='E', array=array[:, count])
                 columns.append(column)
@@ -109,7 +128,7 @@ class BuildFitsFile3dhst(object):
         hdu.writeto(self._output_file, clobber=True)
 
     def _process_file(self, key, filename):
-        row = [-99] * (len(PARAMETERS) * len(VALUES) + 5)
+        row = [-99] * (len(PARAMETERS_HIGHZ if self._high_z else PARAMETERS_NORMAL) * len(VALUES) + 5)
         line = None
         line_number = 0
         percentiles_next = False
@@ -155,11 +174,12 @@ class BuildFitsFile3dhst(object):
                         row[5 + (13 * len(VALUES))] = float(best_fits[13])  # tvism
                         row[5 + (14 * len(VALUES))] = float(best_fits[14])  # Mdust
                         row[5 + (15 * len(VALUES))] = float(best_fits[15])  # SFR
-                        row[5 + (16 * len(VALUES))] = float(best_fits[17])  # age_M
-                        row[5 + (17 * len(VALUES))] = float(best_fits[19])  # lg(M/Lh)
-                        row[5 + (18 * len(VALUES))] = float(best_fits[20])  # lg(M/Lk)
-                        row[5 + (19 * len(VALUES))] = float(best_fits[16])  # A_V
-                        row[5 + (20 * len(VALUES))] = float(best_fits[18])  # Tdust
+                        if self._high_z:
+                            row[5 + (16 * len(VALUES))] = float(best_fits[17])  # age_M
+                            row[5 + (17 * len(VALUES))] = float(best_fits[19])  # lg(M/Lh)
+                            row[5 + (18 * len(VALUES))] = float(best_fits[20])  # lg(M/Lk)
+                            row[5 + (19 * len(VALUES))] = float(best_fits[16])  # A_V
+                            row[5 + (20 * len(VALUES))] = float(best_fits[18])  # Tdust
 
                     elif line_number >= 16:
                         if line.startswith("#....percentiles of the PDF......"):
@@ -197,8 +217,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('output', nargs=1, help='the output filename')
     parser.add_argument('input_root', nargs=1, help='root directory to search')
+    parser.add_argument('--highz', action='store_true', help='Is this a Magphys HighZ run?', default=False)
 
     args = vars(parser.parse_args())
 
-    build = BuildFitsFile3dhst(args['output'][0], args['input_root'][0])
+    build = BuildFitsFile3dhst(args['output'][0], args['input_root'][0], high_z=args['highz'])
     build.build_file()
