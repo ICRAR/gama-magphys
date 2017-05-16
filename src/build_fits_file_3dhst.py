@@ -186,15 +186,16 @@ class BuildFitsFile3dhst(object):
                             percentiles_next = True
 
                         elif percentiles_next:
-                            values = line.split()
-                            offset = 5 + (parameter_number * 6) + 1
-                            row[offset] = float(values[0])
-                            row[offset + 1] = float(values[1])
-                            row[offset + 2] = float(values[2])
-                            row[offset + 3] = float(values[3])
-                            row[offset + 4] = float(values[4])
-                            percentiles_next = False
-                            parameter_number += 1
+                            if parameter_number < len(PARAMETERS_HIGHZ if self._high_z else PARAMETERS_NORMAL):
+                                values = line.split()
+                                offset = 5 + (parameter_number * 6) + 1
+                                row[offset] = float(values[0])
+                                row[offset + 1] = float(values[1])
+                                row[offset + 2] = float(values[2])
+                                row[offset + 3] = float(values[3])
+                                row[offset + 4] = float(values[4])
+                                percentiles_next = False
+                                parameter_number += 1
 
         except:
             LOG.exception('''Exception after {0} lines
