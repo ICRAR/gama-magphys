@@ -152,10 +152,10 @@ class BuildFitsFile3dhst(object):
                         else:
                             LOG.warning('Only {0} arguments from line: {1}'.format(len(best_fit), line))
                             if len(best_fit) == 3 and best_fit[1].startswith('0') and best_fit[1].endswith('*'):
-                                row[1] = int(best_fit[0])
                                 row[2] = 0
-                                row[3] = 0.0
-                                row[4] = float(best_fit[2])
+                                row[3] = 0
+                                row[4] = 0.0
+                                row[1] = float(best_fit[2])
                     elif line_number == 11:
                         best_fits = line.split()
                         row[5 + (0 * len(VALUES))] = float(best_fits[0])    # fmu(SFH)
