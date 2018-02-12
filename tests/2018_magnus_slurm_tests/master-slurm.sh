@@ -11,4 +11,3 @@
 cd $SLURM_SUBMIT_DIR
 
 srun run-task.sh
-

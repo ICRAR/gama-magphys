@@ -54,3 +54,5 @@ echo SLURMD_NODENAME             = $SLURMD_NODENAME
 
 dir_id=`printf %06d $((SLURM_ARRAY_TASK_ID * 24 + SLURM_PROCID))`
 echo "dir_id = $dir_id"
+
+echo "Done"
