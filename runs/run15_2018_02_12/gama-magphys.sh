@@ -2,13 +2,13 @@
 
 # We are one of 24 running on a node as part of an array job
 # Show the environment variables
-echo "ALPS_APP_PE = $ALPS_APP_PE"
+echo "SLURM_PROCID = $SLURM_PROCID"
 echo "SLURM_ARRAY_TASK_ID = $SLURM_ARRAY_TASK_ID"
 echo "SLURM_SUBMIT_DIR = $SLURM_SUBMIT_DIR"
 
-dir_id=`printf %06d $((SLURM_ARRAY_TASK_ID * 24 + ALPS_APP_PE))`
+dir_id=`printf %06d $((SLURM_ARRAY_TASK_ID * 24 + SLURM_PROCID))`
 echo "dir_id = $dir_id"
-directory="/scratch/pawsey0160/kvinsen/run13_gama_2017_01_19/$dir_id"
+directory="/scratch/pawsey0160/kvinsen/run15_2018_02_12/$dir_id"
 echo "directory = $directory"
 if [ -d $directory ]; then
     cd $directory
