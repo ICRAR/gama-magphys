@@ -11,6 +11,9 @@ echo "dir_id = $dir_id"
 directory="/scratch/pawsey0160/kvinsen/run15_2018_02_12/$dir_id"
 echo "directory = $directory"
 if [ -d $directory ]; then
+    echo "Switching environment to GNU"
+    module swap PrgEnv-cray PrgEnv-gnu
+
     cd $directory
     date > "$SLURM_SUBMIT_DIR/$dir_id.log"
     bash process_data.sh >> "$SLURM_SUBMIT_DIR/$dir_id.log"
