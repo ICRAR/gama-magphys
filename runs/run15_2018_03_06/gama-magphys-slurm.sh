@@ -2,10 +2,10 @@
 # SLURM directives
 #
 #SBATCH --job-name=gama-magphys
-#SBATCH --time=03:00:00
+#SBATCH --time=04:00:00
 #SBATCH --ntasks-per-node=1
 #SBATCH --nodes=1
-#SBATCH --array=0-1476%30
+#SBATCH --array=0-1994%40
 
 module load gfortran
 
