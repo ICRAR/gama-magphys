@@ -5,7 +5,7 @@
 #SBATCH --time=04:00:00
 #SBATCH --ntasks-per-node=1
 #SBATCH --nodes=1
-#SBATCH --array=0-1994%40
+#SBATCH --array=0-1994%50
 #SBATCH --hint=multithread
 
 module load gfortran
