@@ -87,7 +87,7 @@ class BuildFitsFile(object):
         LOG.info('Rows: {}'.format(len(self._rows)))
         array = numpy.array(self._rows)
         columns = [
-            pyfits.Column(name='gama_id', format='10A', array=array[:, 0]),
+            pyfits.Column(name='gama_id', format='20A', array=array[:, 0]),
             pyfits.Column(name='redshift', format='E', array=array[:, 1]),
             pyfits.Column(name='i_sfh', format='J', array=array[:, 2]),
             pyfits.Column(name='i_ir', format='J', array=array[:, 3]),
@@ -110,6 +110,7 @@ class BuildFitsFile(object):
         line_number = 0
         percentiles_next = False
         parameter_number = 0
+        LOG.info('key: {}, filename: {}'.format(key, filename))
         row[0] = key[:-4]
         try:
             LOG.info('Processing {0}'.format(filename))
