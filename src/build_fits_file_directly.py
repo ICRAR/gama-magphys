@@ -66,22 +66,13 @@ class BuildFitsFile(object):
         self._output_file = output_file
         self._input_root = input_root
 
-    @staticmethod
-    def _fix_numbering(filename):
-        number_zeros = 12 - len(filename)
-        zeros = number_zeros * '0'
-        new_name = zeros + filename
-        return new_name
-
     def _get_files_to_read(self):
         self._files_to_process = {}
         for root, dir_names, filenames in walk(self._input_root):
             for match in fnmatch.filter(filenames, '*.fit'):
                 result_file = join(root, match)
-                elements = root.split('/')
-                key = join(elements[-2], self._fix_numbering(match))
-                LOG.info('Adding {0}: {1}'.format(key, result_file))
-                self._files_to_process[key] = result_file
+                LOG.info('Adding {0}: {1}'.format(match, result_file))
+                self._files_to_process[match[:-4]] = result_file
 
     def _create_fits_file(self):
         LOG.info('Rows: {}'.format(len(self._rows)))
@@ -110,8 +101,7 @@ class BuildFitsFile(object):
         line_number = 0
         percentiles_next = False
         parameter_number = 0
-        LOG.info('key: {}, filename: {}'.format(key, filename))
-        row[0] = key[:-4]
+        row[0] = key
         try:
             LOG.info('Processing {0}'.format(filename))
             with open(filename) as f:
