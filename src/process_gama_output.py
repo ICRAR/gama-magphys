@@ -199,6 +199,7 @@ def main(run_id, directory, update):
 
     connection.close()
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('run_id', type=int, nargs=1, help='the run id')
